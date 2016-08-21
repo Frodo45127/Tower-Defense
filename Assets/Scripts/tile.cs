@@ -21,6 +21,11 @@ public class tile : MonoBehaviour {
 	public bool isMountain;
 	public bool isWater;
 	private bool isBuildable;
+	private bool isBlocked;
+
+	// variables para determinar el comienzo y el fin del camino
+	public bool isStartingPoint;
+	public bool isEndingPoint;
 
 	// variables para determinar si esta dentro de los limites
 	private bool isPlayableTerrain;
@@ -34,6 +39,14 @@ public class tile : MonoBehaviour {
 
 		// cacheos
 		tileTransform = transform;
+
+		// variable para identificar caminos bloqueados
+		isBlocked = false;
+
+		// Salvaguarda para que no se pueda setear un comienzo o final en una casilla que no sea camino.
+		if (isStartingPoint || isEndingPoint) {
+			isRoad = true;
+		}
 
 		// Determinamos que tipo de celda es por prioridad (temporal)
 		if (isRoad) {

@@ -46,7 +46,7 @@ public class pauseMenu : MonoBehaviour {
 			// pilla los datos de la puntuación
 			score = gameManager.Instance.Score.ToString();
 			// busca su text y le cuela los datos guardados
-			GameObject.FindGameObjectWithTag("CurrentScorePauseMenu").GetComponent<Text>().text = "Puntos: " + score;
+			GameObject.Find("PauseMenuCurrentScore").GetComponent<Text>().text = "Puntos: " + score;
 		}
 		// si el juego está pausado, despausalo
 		else if (Time.timeScale == 0) {
