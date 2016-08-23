@@ -1,0 +1,7 @@
+Etiqueta:
+- Inicial de nombre de archivo siempre en mayuscula;
+- Inicial de clases siempre en mayuscula
+- Inicial de funciones siempre en mayuscula
+- Inicial de variables siempre en minuscula
+- _ al principio de variable solo si es una variable privada en una propiedad publica.
+- Los niveles son mayuscula al principio de cada palabra y - para separar palabras.
