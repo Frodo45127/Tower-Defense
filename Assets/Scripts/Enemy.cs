@@ -2,14 +2,14 @@
 using System.Collections;
 
 //-----------------------------------------------------------------------
-// enemy.cs
+// Enemy.cs
 // 
 // Este script es del que heredan los scripts de los enemigos.
 // Todas las variables, comportamientos comunes y estrategias van aquí.
 //
 //-----------------------------------------------------------------------
 
-public class enemy : MonoBehaviour {
+public class Enemy : MonoBehaviour {
 
 	// cacheo
 	protected Transform myTransform;

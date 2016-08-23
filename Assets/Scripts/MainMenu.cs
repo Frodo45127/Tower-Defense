@@ -4,14 +4,14 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 //-----------------------------------------------------------------------
-// mainMenu.cs
+// MainMenu.cs
 //
 // Este script es el que controla lo que hace cada boton del menu principal.
 // Para cosas con la camara, envia llamadas a mainMenuCamera.cs.
 //
 //-----------------------------------------------------------------------
 
-public class mainMenu : MonoBehaviour {
+public class MainMenu : MonoBehaviour {
 
 	// carga el nivel que le entre como argumento
 	public void LoadFirstLevel(int level) {

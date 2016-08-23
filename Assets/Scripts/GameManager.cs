@@ -4,24 +4,24 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 //-----------------------------------------------------------------------
-// gameManager.cs
+// GameManager.cs
 //
 // Este script es el que controla todo lo que tiene que ocurrir de manera
 // coherente entre escenas (conservar puntos, guardar puntuaciones, etc)
 //
 //-----------------------------------------------------------------------
 
-public class gameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour {
 
 	// con esto ponemos en marcha el singleton
 	// solo sirve para cosas con una instancia (puntos, vidas spawner,...)
-	public static gameManager _instance;
+	public static GameManager _instance;
 
-	public static gameManager Instance {
+	public static GameManager Instance {
 		get {
 			if (_instance == null) {
 				GameObject go = new GameObject ("GameManager");
-				go.AddComponent<gameManager> ();
+				go.AddComponent<GameManager> ();
 			}
 			return _instance;
 		}
@@ -46,7 +46,7 @@ public class gameManager : MonoBehaviour {
 	public bool IsFirstStart { get; set;}
 
 	// inicializamos la variable para el logo con el constructor
-	public gameManager(){
+	public GameManager(){
 		IsFirstStart = true;
 	}
 
@@ -60,7 +60,7 @@ public class gameManager : MonoBehaviour {
 		// Se asegura de que el tiempo funciona, pues esto se llama normalmente con el tiempo parado
 		Time.timeScale = 1;
 		// Si hay un nombre escrito en el campo de jugador, guarda su puntuación
-		if (string.IsNullOrEmpty(gameManager.Instance.PlayerName)) {
+		if (string.IsNullOrEmpty(GameManager.Instance.PlayerName)) {
 			// do nothing
 		}	
 		else {

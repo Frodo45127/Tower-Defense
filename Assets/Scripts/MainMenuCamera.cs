@@ -4,14 +4,14 @@ using System.Collections;
 using UnityEngine.UI;
 
 //-----------------------------------------------------------------------
-// mainMenuCamera.cs
+// MainMenuCamera.cs
 //
 // Este script es el que controla la camara del menu principal.
 // Esto incluye el movimiento de un menu a otro y el fade del logo.
 //
 //-----------------------------------------------------------------------
 
-public class mainMenuCamera : MonoBehaviour {
+public class MainMenuCamera : MonoBehaviour {
 
 	// cacheo del transform de la cámara y de los canvas que hemos cogido con el gameobject
 	private Transform myTransform;
@@ -73,7 +73,7 @@ public class mainMenuCamera : MonoBehaviour {
 	void Update (){
 
 		// si la intro no ha salido por primera vez
-		if (gameManager.Instance.IsFirstStart) {
+		if (GameManager.Instance.IsFirstStart) {
 			LogoFadeInAndOut ();
 		}
 		else {
@@ -218,7 +218,7 @@ public class mainMenuCamera : MonoBehaviour {
 		else if (isTimeToShowMainMenu == true) {
 			CanvasIntro.SetActive (false);
 			// le dice al gameManager que ya ha mostrado la intro una vez, que no la muestre mas
-			gameManager.Instance.IsFirstStart = false;
+			GameManager.Instance.IsFirstStart = false;
 		}
 	}
 		

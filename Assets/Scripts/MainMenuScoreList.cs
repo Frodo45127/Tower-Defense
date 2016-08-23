@@ -4,14 +4,14 @@ using System.Collections;
 using UnityEngine.UI;
 
 //-----------------------------------------------------------------------
-// mainMenuScoreList.cs
+// MainMenuScoreList.cs
 //
 // Este script es el que controla la actualizacion de la tabla de puntuaciones.
 // Tambien controla el boton de regreso al menu principal.
 //
 //-----------------------------------------------------------------------
 
-public class mainMenuScoreList : MonoBehaviour {
+public class MainMenuScoreList : MonoBehaviour {
 
 	// variables para almacenar los datos del jugador y su puntuación
 	private string playerName;

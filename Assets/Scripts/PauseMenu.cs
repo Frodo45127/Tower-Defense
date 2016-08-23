@@ -6,17 +6,17 @@ using UnityEngine.UI;
 using System.Collections;
 
 //-----------------------------------------------------------------------
-// pauseMenu.cs
+// PauseMenu.cs
 //
 // Este script es el que controla el menu de pausa.
 //
 //-----------------------------------------------------------------------
 
 //FIXME: arreglar esto cuando montemos el nivel de pruebas
-public class pauseMenu : MonoBehaviour {
+public class PauseMenu : MonoBehaviour {
 
 	// panel hijo del menu pausa, no el menu pausa en sí ke si no no va
-	public GameObject PauseMenu;
+	public GameObject pauseMenu;
 
 	// variable interna para la puntuacion
 	private string score;
@@ -25,7 +25,7 @@ public class pauseMenu : MonoBehaviour {
 	void Start () {
 
 		// esconde por defecto el menu del juego
-		PauseMenu.SetActive (false);
+		pauseMenu.SetActive (false);
 	}
 	
 	// Update is called once per frame
@@ -42,9 +42,9 @@ public class pauseMenu : MonoBehaviour {
 		if (Time.timeScale == 1) {
 			Time.timeScale = 0;
 			// haz el menu de pausa visible
-			PauseMenu.SetActive (true);
+			pauseMenu.SetActive (true);
 			// pilla los datos de la puntuación
-			score = gameManager.Instance.Score.ToString();
+			score = GameManager.Instance.Score.ToString();
 			// busca su text y le cuela los datos guardados
 			GameObject.Find("PauseMenuCurrentScore").GetComponent<Text>().text = "Puntos: " + score;
 		}
@@ -52,11 +52,11 @@ public class pauseMenu : MonoBehaviour {
 		else if (Time.timeScale == 0) {
 			Time.timeScale = 1;
 			// esconde el menu del juego
-			PauseMenu.SetActive (false);
+			pauseMenu.SetActive (false);
 		}
 	}
 	// funcion para salir al menu
 	public void ExitToMenu () {
-		gameManager.Instance.ExitToMainMenu();
+		GameManager.Instance.ExitToMainMenu();
 	}
 }

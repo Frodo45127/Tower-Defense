@@ -2,7 +2,7 @@
 using System.Collections;
 
 //-----------------------------------------------------------------------
-// tile.cs
+// Tile.cs (provisional, posiblemente se borre)
 //
 // Este script es el que controla todo lo relacionado con cada celda del grid.
 // Basicamente, el mapa es una grilla de 20x20 de celdas de 20x20 (arreglar eto)
@@ -13,7 +13,7 @@ using System.Collections;
 // Al menos ese es el plan.
 //-----------------------------------------------------------------------
 
-public class tile : MonoBehaviour {
+public class Tile : MonoBehaviour {
 
 	// variables para determinar el tipo de terreno
 	public bool isRoad;
