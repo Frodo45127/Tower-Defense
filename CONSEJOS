@@ -5,3 +5,4 @@ Etiqueta:
 - Inicial de variables siempre en minuscula
 - _ al principio de variable solo si es una variable privada en una propiedad publica.
 - Los niveles son mayuscula al principio de cada palabra y - para separar palabras.
+- Todo lo demas (assets en general): todas las palabras juntas y la primera en mayuscula. Ejemplo: EstoEsUnEjemplo.tga.
