@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+// necesario para usar las listas
+using System.Collections.Generic;
 
 //-----------------------------------------------------------------------
 // Grid.cs
@@ -17,6 +19,9 @@ public class Grid : MonoBehaviour {
 	// variables que necesitamos
 	// transform del enemigo, para probar el grid
 	public Transform enemyTest;
+
+	// lista del pathfinding, y transforms para provar el pathfinding
+	public List<Node> path;
 
 	// - La capa en la que debe estar el terreno caminable
 	public LayerMask walkableTerrain;
@@ -82,7 +87,7 @@ public class Grid : MonoBehaviour {
 				bool isWalkable = Physics.CheckSphere (gridWorldNodeCenter, nodeRadius, walkableTerrain);
 				
 				// y añadimos el nodo a la lista de nodos en el grid 
-				grid [x, y] = new Node (isWalkable, gridWorldNodeCenter);
+				grid [x, y] = new Node (isWalkable, gridWorldNodeCenter, x, y);
 			}
 		}
 	}
@@ -111,6 +116,38 @@ public class Grid : MonoBehaviour {
 		return grid [x, y];
 	}
 
+	//Funcion para saber cuales son los vecinos de un nodo conocido
+	public List<Node> GetNeighbours(Node node){
+
+		// Creamos la nueva lista de nodos
+		List<Node> neighboursList = new List<Node>();
+
+		// Comprobamos cada nodo en sus cercanias
+		for (int x = -1; x <= 1; x++){
+			for (int y = -1; y <= 1; y++){
+
+				// no queremos que compruebe ni diagonales ni el centro
+				if ((x == 0 && y == 0) || (x == -1 && y == -1) || (x == -1 && y == 1) || (x == 1 && y == -1) || (x == 1 && y == 1)) {
+					continue;
+				}
+
+				// cogemos la posicion del nodo en el grid y comprobamos sus alrededores
+				int nodeX = node.gridX + x;
+				int nodeY = node.gridY + y;
+
+				// si los nodos de los lados no existen no queremos que los compruebe
+				// usease, evitamos que compruebe nodos fuera de los bordes
+				if ( nodeX >= 0 && nodeX < gridSizeX && nodeY >= 0 && nodeY < gridSizeY ){
+
+					// si el nodo es valido, añadelo a la lista
+					neighboursList.Add(grid[nodeX,nodeY]);
+				}
+			}
+		}
+
+		// y ahora devuelve la lista
+		return neighboursList;
+	}
 	// Funcion para mostrar gizmos, para ver mejor el grid y los nodos
 	void OnDrawGizmos() {
 
@@ -128,11 +165,18 @@ public class Grid : MonoBehaviour {
 
 				// coloreale gris si es caminable, rojo si no lo es
 				// si n.isWalkable es true, entonces (?) es gris, si no (:) es rojo
-				Gizmos.color = n.isWalkable ? Color.grey : Color.red;
+				Gizmos.color = n.isWalkable ? Color.white : Color.red;
 
 				// Colorea el nodo si el enemigo esta sobre el
 				if (enemyNode == n){
 					Gizmos.color = Color.blue;
+				}
+
+				// colorea el camino encontrado por el pathfinder
+				if (path != null){
+					if (path.Contains(n)){
+						Gizmos.color = Color.yellow;
+					}
 				}
 
 				// y dibuja un cubo un pelin mas pequeño que el nodo para representarlo

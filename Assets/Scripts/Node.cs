@@ -15,11 +15,34 @@ public class Node {
 	public bool isWalkable;
 	public Vector3 worldPosition;
 
+	// variables para guardar la posicion del nodo
+	public int gridX;
+	public int gridY;
+
+	// variable para saber el padre del nodo y poder trazar un camino
+	public Node parentNode;
+
+	// variables para los costes del algoritmo de pathfinding
+	// coste desde el inicio al nodo
+	public int gCost;
+
+	// coste desde el final al nodo
+	public int hCost;
+
+	// suma de los costes del nodo
+	public int fCost{
+		get{
+			return gCost + hCost;
+		}
+	}
+
 	// constructor de los nodos
 	// le pasamos los parametros de si es caminable y de donde esta el nodo
 	// desde el creador del grid
-	public Node(bool _isWalkable, Vector3 _worldPosition) {
+	public Node(bool _isWalkable, Vector3 _worldPosition, int _gridX, int _gridY) {
 		isWalkable = _isWalkable;
 		worldPosition = _worldPosition;
+		gridX = _gridX;
+		gridY = _gridY;
 	}
 }
