@@ -3,6 +3,7 @@ Etiqueta:
 - Inicial de clases siempre en mayuscula
 - Inicial de funciones siempre en mayuscula
 - Inicial de variables siempre en minuscula
-- _ al principio de variable solo si es una variable privada en una propiedad publica.
+- _ al principio de variable si es una variable privada en una propiedad publica.
+- _ al principio de variable si es una variable usada en un constructor.
 - Los niveles son mayuscula al principio de cada palabra y - para separar palabras.
 - Todo lo demas (assets en general): todas las palabras juntas y la primera en mayuscula. Ejemplo: EstoEsUnEjemplo.tga.

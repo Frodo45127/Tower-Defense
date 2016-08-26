@@ -23,8 +23,9 @@ public class Grid : MonoBehaviour {
 	// lista del pathfinding, y transforms para provar el pathfinding
 	public List<Node> path;
 
-	// - La capa en la que debe estar el terreno caminable
+	// - Las capas a usar para el grid
 	public LayerMask walkableTerrain;
+	public LayerMask buildableTerrain;
 
 	// - El tamaño del grid
 	public Vector2 gridWorldSize;
@@ -33,7 +34,7 @@ public class Grid : MonoBehaviour {
 	public float nodeRadius;
 
 	// - Una lista de dos dimensiones con todos los nodos del grid
-	Node[,] grid;
+	public Node[,] grid;
 
 	// - Diámetro de los nodos, necesarios para ciertas operaciones
 	private float nodeDiameter;
@@ -83,11 +84,12 @@ public class Grid : MonoBehaviour {
 				// sacamos su centro en coordenadas del mundo
 				Vector3 gridWorldNodeCenter = gridWorldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.up * (y * nodeDiameter + nodeRadius);
 
-				// sacamos si el nodo esta tocando terreno caminable
+				// sacamos si el nodo esta tocando terreno caminable, construible, etc
 				bool isWalkable = Physics.CheckSphere (gridWorldNodeCenter, nodeRadius, walkableTerrain);
-				
+				bool isBuildable = Physics.CheckSphere (gridWorldNodeCenter, nodeRadius, buildableTerrain);
+
 				// y añadimos el nodo a la lista de nodos en el grid 
-				grid [x, y] = new Node (isWalkable, gridWorldNodeCenter, x, y);
+				grid [x, y] = new Node (gridWorldNodeCenter, x, y, isWalkable, isBuildable);
 			}
 		}
 	}

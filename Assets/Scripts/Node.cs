@@ -11,8 +11,9 @@ using System.Collections;
 
 public class Node {
 
-	// variables para saber si el nodo es caminable y para saber donde esta
+	// variables para saber si el nodo es caminable, construible y para saber donde esta
 	public bool isWalkable;
+	public bool isBuildable;
 	public Vector3 worldPosition;
 
 	// variables para guardar la posicion del nodo
@@ -39,10 +40,11 @@ public class Node {
 	// constructor de los nodos
 	// le pasamos los parametros de si es caminable y de donde esta el nodo
 	// desde el creador del grid
-	public Node(bool _isWalkable, Vector3 _worldPosition, int _gridX, int _gridY) {
-		isWalkable = _isWalkable;
+	public Node(Vector3 _worldPosition, int _gridX, int _gridY, bool _isWalkable, bool _isBuildable) {
 		worldPosition = _worldPosition;
 		gridX = _gridX;
 		gridY = _gridY;
+		isWalkable = _isWalkable;
+		isBuildable = _isBuildable;
 	}
 }
