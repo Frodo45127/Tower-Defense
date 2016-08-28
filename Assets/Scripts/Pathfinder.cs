@@ -21,12 +21,20 @@ public class Pathfinder : MonoBehaviour {
 	}
 
 	// Probamos el path
-	// TODO: Borrar esto cuando todo rule
-	public Transform startPath;
-	public Transform targetPath;
+
+
+	public Transform[] startPath;
+	public Transform[] targetPath;
 
 	void Update(){
-		FindShortestPath (startPath.position, targetPath.position);
+		FindShortestPathFromAllSources ();
+	}
+
+	// Funcion para calcular el camino mas corto desde todas las entradas
+	void FindShortestPathFromAllSources(){
+		for (int i = 0; i < startPath.Length; i++){
+			FindShortestPath (startPath [i].position, targetPath [0].position);
+		}
 	}
 
 	// Función para encontrar el camino más corto entre dos puntos
@@ -123,7 +131,14 @@ public class Pathfinder : MonoBehaviour {
 		Trail.Reverse();
 
 		// Asignamos esto para hacer las pruebas del pathfinding
-		grid.path = Trail;
+		// Si existe alguna lista de nodos añadimos la nueva lista
+		if (grid.pathList != null){
+			grid.pathList.Add (Trail);
+		}
+		// Si no existen listas, la inicializamos
+		else {
+			grid.pathList = new List<List<Node>>();
+		}
 
 	}
 

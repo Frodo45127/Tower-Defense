@@ -13,11 +13,16 @@ using UnityEngine.EventSystems;
 
 public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 
-	// variable para el cacheo del grid
-	public GameObject pathfinder;
-
 	// menu de seleccion de torretas
 	public GameObject turretSelectionMenu;
+
+	// variable para el cacheo del grid
+	Grid grid;
+
+	// en el awake cacheamos lo necesario
+	void Awake(){
+		grid = GetComponent<Grid>();
+	}
 
 	// usamos la interfaz IPointerClickHandler para que el click no atraviese
 	// al boton, haciendo que el menu desaparezca
@@ -37,7 +42,7 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 			Vector3 clickedMousePositionInWorldSpace = Camera.main.ScreenToWorldPoint(new Vector3(clickedMousePosition.x, clickedMousePosition.y, 9f));
 
 			// comprobamos en que nodo hemos soltado el raton
-			Node clickedNode = pathfinder.GetComponent<Grid> ().GetNodeFromWorldPosition (clickedMousePositionInWorldSpace);
+			Node clickedNode = grid.GetNodeFromWorldPosition (clickedMousePositionInWorldSpace);
 
 			// si el nodo existe
 			if (clickedNode != null) {

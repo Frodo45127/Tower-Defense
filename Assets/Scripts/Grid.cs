@@ -7,6 +7,8 @@ using System.Collections.Generic;
 // Grid.cs
 // 
 // Este script es el que se encarga de crear el grid de nodos para el pathfinding.
+// Es un grid de 20x20, con 2 celdas en cada margen que no se pueden usar (24x24).
+// Para colocar las cosas en el grid hay que usar multiplos impares de 17.
 //
 // Nota:
 // - grid...: posicion dentro del grid en enteros.
@@ -17,15 +19,12 @@ using System.Collections.Generic;
 public class Grid : MonoBehaviour {
 
 	// variables que necesitamos
-	// transform del enemigo, para probar el grid
-	public Transform enemyTest;
-
 	// lista del pathfinding, y transforms para provar el pathfinding
-	public List<Node> path;
+	public List<List<Node>> pathList;
 
 	// - Las capas a usar para el grid
 	public LayerMask walkableTerrain;
-	public LayerMask buildableTerrain;
+	public LayerMask unbuildableTerrain;
 
 	// - El tamaño del grid
 	public Vector2 gridWorldSize;
@@ -86,7 +85,7 @@ public class Grid : MonoBehaviour {
 
 				// sacamos si el nodo esta tocando terreno caminable, construible, etc
 				bool isWalkable = Physics.CheckSphere (gridWorldNodeCenter, nodeRadius, walkableTerrain);
-				bool isBuildable = Physics.CheckSphere (gridWorldNodeCenter, nodeRadius, buildableTerrain);
+				bool isBuildable = !Physics.CheckSphere (gridWorldNodeCenter, nodeRadius, unbuildableTerrain);
 
 				// y añadimos el nodo a la lista de nodos en el grid 
 				grid [x, y] = new Node (gridWorldNodeCenter, x, y, isWalkable, isBuildable);
@@ -159,9 +158,6 @@ public class Grid : MonoBehaviour {
 		// Si el grid existe
 		if (grid != null){
 
-			// guardamos en enemyNode el nodo en el que esta el enemigo
-			Node enemyNode = GetNodeFromWorldPosition (enemyTest.position);
-
 			// Por cada nodo en el grid
 			foreach (Node n in grid){
 
@@ -169,15 +165,12 @@ public class Grid : MonoBehaviour {
 				// si n.isWalkable es true, entonces (?) es gris, si no (:) es rojo
 				Gizmos.color = n.isWalkable ? Color.white : Color.red;
 
-				// Colorea el nodo si el enemigo esta sobre el
-				if (enemyNode == n){
-					Gizmos.color = Color.blue;
-				}
-
 				// colorea el camino encontrado por el pathfinder
-				if (path != null){
-					if (path.Contains(n)){
-						Gizmos.color = Color.yellow;
+				if (pathList != null){
+					foreach (List<Node> l in pathList){
+						if (l.Contains(n)){
+							Gizmos.color = Color.yellow;
+						}	
 					}
 				}
 
