@@ -20,9 +20,7 @@ public class Pathfinder : MonoBehaviour {
 		grid = GetComponent<Grid>();
 	}
 
-	// Probamos el path
-
-
+	// Hacemos un array con las entradas y otro con las salidas
 	public Transform[] startPath;
 	public Transform[] targetPath;
 
