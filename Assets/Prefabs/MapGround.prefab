@@ -105,6 +105,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turretSelectionMenu: {fileID: 0}
+  turretManagementMenu: {fileID: 0}
+  turretMenu: {fileID: 0}
 --- !u!114 &114000013574868364
 MonoBehaviour:
   m_ObjectHideFlags: 1

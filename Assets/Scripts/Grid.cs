@@ -96,7 +96,7 @@ public class Grid : MonoBehaviour {
 	// Funcion para saber sobre que nodo esta un enemigo sabiendo sus coordenadas
 	// del mundo, la cual nos devuelve un nodo del grid
 	public Node GetNodeFromWorldPosition(Vector3 worldPosition){
-
+				
 		// sacamos la posicion en la que estamos en el grid en porcentaje (entre 0 y 1)
 		// NOTA: esto asume que el centro del grid es 0,0,0 y que el grid es cuadrado.
 		// Es posible que se rompa si el grid no esta en esa posicion.

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 public class Pathfinder : MonoBehaviour {
 
 	// variable para el cacheo del grid
-	Grid grid;
+	private Grid grid;
 
 	// en el awake cacheamos lo necesario
 	void Awake(){

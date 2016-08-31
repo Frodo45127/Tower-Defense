@@ -11,9 +11,11 @@ using System.Collections;
 
 public class Node {
 
-	// variables para saber si el nodo es caminable, construible y para saber donde esta
+	// variables para saber si el nodo es caminable, construible, 
+	// si tiene una torreta y para saber donde esta
 	public bool isWalkable;
 	public bool isBuildable;
+	public bool isBuildableAndHasATurret;
 	public Vector3 worldPosition;
 
 	// variables para guardar la posicion del nodo
