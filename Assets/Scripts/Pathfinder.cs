@@ -30,10 +30,12 @@ public class Pathfinder : MonoBehaviour {
 		FindShortestPathFromAllSources ();
 	}
 
-	// Funcion para calcular el camino mas corto desde todas las entradas
+	// Funcion para calcular el camino mas corto desde todas las entradas a todas las salidas.
 	void FindShortestPathFromAllSources(){
-		for (int i = 0; i < startPath.Length; i++){
-			FindShortestPath (startPath [i].position, targetPath [0].position);
+		for (int i = 0; i < startPath.Length; i++) {
+			for (int j = 0; j < targetPath.Length; j++) {
+				FindShortestPath (startPath [i].position, targetPath [j].position);
+			}
 		}
 	}
 
