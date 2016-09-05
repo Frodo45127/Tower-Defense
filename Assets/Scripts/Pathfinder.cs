@@ -24,12 +24,15 @@ public class Pathfinder : MonoBehaviour {
 	public Transform[] startPath;
 	public Transform[] targetPath;
 
-	void Update(){
-		FindShortestPathFromAllSources ();
-	}
-
 	// Funcion para calcular el camino mas corto desde todas las entradas a todas las salidas.
-	void FindShortestPathFromAllSources(){
+	public void FindShortestPathFromAllSources(){
+
+		// Primero miramos si ya hay algun camino calculado, en cuyo caso lo borramos
+		if (grid.pathList != null){
+			grid.pathList.Clear ();
+		}
+
+		// Despues recalculamos todos los caminos
 		for (int i = 0; i < startPath.Length; i++) {
 			for (int j = 0; j < targetPath.Length; j++) {
 				FindShortestPath (startPath [i].position, targetPath [j].position);
@@ -39,7 +42,7 @@ public class Pathfinder : MonoBehaviour {
 
 	// Función para encontrar el camino más corto entre dos puntos
 	// si sabemos los dos puntos
-	void FindShortestPath(Vector3 startWorldPosition, Vector3 targetWorldPosition){
+	public void FindShortestPath(Vector3 startWorldPosition, Vector3 targetWorldPosition){
 		
 		// Primero pasamos los dos puntos de posicion global a posicion en el grid
 		Node startNode = grid.GetNodeFromWorldPosition (startWorldPosition);
@@ -135,9 +138,10 @@ public class Pathfinder : MonoBehaviour {
 		if (grid.pathList != null){
 			grid.pathList.Add (Trail);
 		}
-		// Si no existen listas, la inicializamos
+		// Si no existen listas, la inicializamos y añadimos la lista
 		else {
 			grid.pathList = new List<List<Node>>();
+			grid.pathList.Add (Trail);
 		}
 
 	}
