@@ -8,6 +8,7 @@ TagManager:
   - Logo
   - LogoBackground
   - Tile
+  - TurretMenu
   layers:
   - Default
   - TransparentFX

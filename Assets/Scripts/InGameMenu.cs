@@ -6,17 +6,18 @@ using UnityEngine.UI;
 using System.Collections;
 
 //-----------------------------------------------------------------------
-// PauseMenu.cs
+// InGameMenu.cs
 //
-// Este script es el que controla el menu de pausa.
+// Este script es el que controla todos los menus que hay en un nivel
+// (el menu de pausa, el de game over, el de nivel completado,...).
 //
 //-----------------------------------------------------------------------
 
 //FIXME: arreglar esto cuando montemos el nivel de pruebas
-public class PauseMenu : MonoBehaviour {
+public class InGameMenu : MonoBehaviour {
 
-	// panel hijo del menu pausa, no el menu pausa en sí ke si no no va
-	public GameObject pauseMenu;
+	// paneles hijos del canvas de los menus
+	public GameObject pauseMenu, levelCompletedMenu, gameOverMenu;
 
 	// variable interna para la puntuacion
 	private string score;
@@ -24,8 +25,10 @@ public class PauseMenu : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		// esconde por defecto el menu del juego
+		// esconde por defecto todos los menus del juego
 		pauseMenu.SetActive (false);
+		levelCompletedMenu.SetActive (false);
+		gameOverMenu.SetActive (false);
 	}
 	
 	// Update is called once per frame
@@ -55,6 +58,35 @@ public class PauseMenu : MonoBehaviour {
 			pauseMenu.SetActive (false);
 		}
 	}
+
+	// funcion que controla que pasa con los menus al perder
+	public void GameOver(){
+		// si el juego funciona, paralo
+		if (Time.timeScale == 1) {
+			Time.timeScale = 0;
+		}
+		// haz el menu de game over visible
+		gameOverMenu.SetActive (true);
+		// pilla los datos de la puntuación
+		score = GameManager.Instance.Score.ToString();
+		// busca su text y le cuela los datos guardados
+		GameObject.Find("GameOverMenuScore").GetComponent<Text>().text = "Puntos: " + score;
+	}
+
+	// funcion que controla que pasa con los menus al ganar
+	public void LevelCompleted(){
+		// si el juego funciona, paralo
+		if (Time.timeScale == 1) {
+			Time.timeScale = 0;
+		}
+		// haz el menu de nivel completado visible
+		levelCompletedMenu.SetActive (true);
+		// pilla los datos de la puntuación
+		score = GameManager.Instance.Score.ToString();
+		// busca su text y le cuela los datos guardados
+		GameObject.Find("LevelCompletedMenuScore").GetComponent<Text>().text = "Puntos: " + score;
+	}
+
 	// funcion para salir al menu
 	public void ExitToMenu () {
 		GameManager.Instance.ExitToMainMenu();

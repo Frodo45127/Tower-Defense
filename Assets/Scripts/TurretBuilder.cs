@@ -69,39 +69,13 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 			// y es construible y no tiene torretas
 			if (clickedNode.isBuildable && !clickedNode.isBuildableAndHasATurret) {
 
-				// y ningún menu de torretas esta activo
-				if (!turretSelectionMenu.activeSelf && !turretManagementMenu.activeSelf) {
-					
-					// colocamos el menu de las torretas sobre el raton y lo activamos
-					turretSelectionMenu.transform.position = clickedMousePositionInWorldSpace;
-					turretSelectionMenu.SetActive (true);
-					turretMenu.SendMessage ("OpenMenu", clickedNode);
-				}
-
-				// si ya habia un menu activo (cualquiera), lo desactivamos y no hacemos nada mas
-				else {
-					turretSelectionMenu.SetActive (false);
-					turretManagementMenu.SetActive (false);
-				}
+				// le decimos que intente abrirlo
+				turretMenu.SendMessage ("OpenTurretSelectionMenu", clickedNode);
 			}
 
 			// y es construible, pero ya tiene una torreta
 			else if (clickedNode.isBuildable && clickedNode.isBuildableAndHasATurret) {
-				
-				// y ningún menu de torretas esta activo
-				if (!turretSelectionMenu.activeSelf && !turretManagementMenu.activeSelf) {
-					
-					// clolocamos el menu de mantenimiento de torretas en la posicion del raton
-					// y lo activamos
-					turretManagementMenu.transform.position = clickedMousePositionInWorldSpace;
-					turretManagementMenu.SetActive (true);
-					turretMenu.SendMessage ("OpenMenu", clickedNode);
-				}
-				// si ya habia un menu activo (cualquiera), lo desactivamos y no hacemos nada mas
-				else {
-					turretSelectionMenu.SetActive (false);
-					turretManagementMenu.SetActive (false);
-				}
+				Debug.Log("Ya hay una torreta, asi que dale a la torreta.");
 			}
 
 			// y no es construible

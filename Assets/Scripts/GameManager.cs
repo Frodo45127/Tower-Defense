@@ -32,8 +32,10 @@ public class GameManager : MonoBehaviour {
 	void Awake(){
 		if (_instance == null) {
 			_instance = this;            
-		} else if (_instance != this)        
-			Destroy (gameObject);    
+		} 
+		else if (_instance != this) {
+			Destroy (gameObject);
+		}
 
 		// le decimos que no desaparezca al cambiar de escena
 		DontDestroyOnLoad (gameObject);
