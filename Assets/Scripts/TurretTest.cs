@@ -11,14 +11,6 @@ using UnityEngine.EventSystems;
 //-----------------------------------------------------------------------
 
 public class TurretTest : Turret, IPointerClickHandler {
+		
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

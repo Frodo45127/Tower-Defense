@@ -43,9 +43,32 @@ public class GameManager : MonoBehaviour {
 
 	// NOTA: El objeto GameManager se crea siempre que algo llame a algo de este script
 	// aquí empezamos a definir las variables y sus propiedades
-	public int Score { get; set;}
-	public string PlayerName { get; set;}
+	// variable necesaria para el arranque
 	public bool IsFirstStart { get; set;}
+
+	// variables necesarias para la partida
+	[SerializeField]
+	private int money;
+	public int Money { 
+		get {
+			return money;
+		} 
+		set {
+			money = value;
+		}
+	}
+	[SerializeField]
+	private int score;
+	public int Score {
+		get {
+			return score;
+		} 
+		set {
+			score = value;
+		}
+	}
+	public string PlayerName { get; set;}
+
 
 	// inicializamos la variable para el logo con el constructor
 	public GameManager(){
@@ -54,7 +77,15 @@ public class GameManager : MonoBehaviour {
 
 	//inicializamos las variables únicas de la partida
 	void Start(){
+		ResetLevel ();
+	}
+
+	// funcion para resetear las variables de la partida (dinero, puntos,...)
+	public void ResetLevel() {
+		// Reinicializamos todas las variables del jugador para la siguiente partida
+		Money = 800;
 		Score = 0;
+		PlayerName = "";
 	}
 
 	// funcion para salir al menu principal
@@ -69,8 +100,7 @@ public class GameManager : MonoBehaviour {
 			AddToHighScoreListSorted (PlayerName, Score);
 		}
 		// Al salir reinicializamos todas las variables del jugador para la siguiente partida
-		Score = 0;
-		PlayerName = "";
+		ResetLevel ();
 		// Volvemos al menú, después de dejar todo listo para otra partida.
 		SceneManager.LoadScene (0);
 	}

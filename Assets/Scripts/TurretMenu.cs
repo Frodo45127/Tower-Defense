@@ -27,9 +27,18 @@ public class TurretMenu : MonoBehaviour {
 	// torreta en la que hemos clickado
 	private GameObject clickedTurret;
 
-	// cacheamos el grid
+	//TODO: borrar esto cuando terminemos de apañar la segunda torreta
+	// costes de las torretas
+	public int costTurret2;
+
+	// cacheamos el grid y el dinero
 	void Awake(){
 		grid = GameObject.Find ("Ground").GetComponent<Grid> ();
+	}
+
+	// seteamos los costes de las torretas
+	void Start(){
+		costTurret2 = 200;
 	}
 
 	// recibimos el nodo donde colocar la torreta al abrir el menu y abrimos el menu
@@ -82,33 +91,48 @@ public class TurretMenu : MonoBehaviour {
 	// Función para construir la torreta.
 	public void BuildTurret(int turret){
 
-		// variables temporales para guardar la torreta a construir y la construida
+		// variables temporales para guardar la torreta a construir, la construida, y su coste
 		GameObject turretToBuild;
 		GameObject newTurret;
+		int costNewTurret;
 
 		// depende del numero que pongamos en el boton, instancia una torreta u otra
 		if (turret == 0) {
 			turretToBuild = turret1;
+			costNewTurret = turret1.GetComponent<TurretTest>().Cost;
 		} 
 		else if (turret == 1) {
 			turretToBuild = turret2;
+			costNewTurret = costTurret2;
 		}
 		else {
 			Debug.Log ("La torreta no existe.");
 			turretToBuild = null;
+			costNewTurret = 0;
 		}
 
-		// instanciamos la nueva torreta y la guardamos en gameObject
-		newTurret = (GameObject)Instantiate (turretToBuild, clickedNode.worldPosition, Quaternion.identity);
+		// si tenemos suficiente dinero para construirla
+		if (costNewTurret <= GameManager.Instance.Money){
+			
+			// instanciamos la nueva torreta y la guardamos en gameObject
+			newTurret = (GameObject)Instantiate (turretToBuild, clickedNode.worldPosition, Quaternion.identity);
 
-		// buscamos la instancia existente del menu de las torretas y se la añadimos
-		newTurret.GetComponent<Turret>().turretMenu = GameObject.FindGameObjectWithTag ("TurretMenu");
+			// buscamos la instancia existente del menu de las torretas y se la añadimos
+			newTurret.GetComponent<Turret>().turretMenu = GameObject.FindGameObjectWithTag ("TurretMenu");
 
-		// seteamos el nodo como ocupado
-		clickedNode.isBuildableAndHasATurret = true;
+			// seteamos el nodo como ocupado
+			clickedNode.isBuildableAndHasATurret = true;
 
-		// despues de instanciar la torreta, oculta el menu
-		turretSelectionMenu.SetActive (false);
+			// reducimos el dinero que tenemos porque nos lo hemos gastado
+			GameManager.Instance.Money -= costNewTurret;
+
+			// despues de instanciar la torreta, oculta el menu
+			turretSelectionMenu.SetActive (false);			
+		}
+		else {
+			Debug.Log("nos falta dinero");
+		}
+
 	}
 
 	// Función para mejorar la torreta.
@@ -131,6 +155,9 @@ public class TurretMenu : MonoBehaviour {
 
 			// sacamos el nodo sobre el que esta la torreta
 			Node clickedTurretNode = grid.GetNodeFromWorldPosition (clickedTurret.transform.position);
+
+			// recuperamos algo del dinero que costo construirla
+			GameManager.Instance.Money += clickedTurret.GetComponent<Turret> ().DestructionCost;
 
 			// destruimos la torreta
 			Destroy (clickedTurret);

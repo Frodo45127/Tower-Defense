@@ -227,3 +227,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turretMenu: {fileID: 1000014123543516, guid: 642bb8f5c2c4545aa9074ba100197b91, type: 2}
+  damage: 2
+  range: 5
+  cost: 100

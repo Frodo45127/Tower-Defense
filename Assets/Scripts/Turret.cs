@@ -20,14 +20,23 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 	// la torreta en la que pinchamos
 	private GameObject clickedTurret;
 
-	// Use this for initialization
-	void Start () {
-		
+	// variables necesarias para cada torreta (se setean en el unity, no en el script)
+	[SerializeField]
+	protected int damage;
+	[SerializeField]
+	protected int range;
+	[SerializeField]
+	protected int cost;
+	public int Cost {
+		get {
+			return cost;
+		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public int DestructionCost {
+		get {
+			return cost / 2;
+		}
 	}
 
 	// usamos la interfaz IPointerClickHandler para que el click no atraviese
