@@ -9,6 +9,8 @@ TagManager:
   - LogoBackground
   - Tile
   - TurretMenu
+  - Enemy
+  - Bullet
   layers:
   - Default
   - TransparentFX

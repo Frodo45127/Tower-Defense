@@ -21,6 +21,8 @@ public class EnemyTest : Enemy {
 		// vida y velocidad del bicho
 		healthPoints = 5;
 		enemySpeed = 50f;
+		score = 50;
+		money = 20;
 
 		// TODO: esto es una chapuza. Hay que arreglarlo.
 		// cogemos la lista de nodos (camino) que haya en el spawner

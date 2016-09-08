@@ -21,6 +21,14 @@ public class Enemy : MonoBehaviour {
 	protected Node currentNode;
 	protected int currentNodeInTheList;
 
+	// puntos que da el enemigo
+	[SerializeField]
+	protected int score;
+
+	// dinero que da el enemigo
+	[SerializeField]
+	protected int money;
+
 	// velocidad del enemigo
 	[SerializeField]
 	protected float enemySpeed;
@@ -68,5 +76,25 @@ public class Enemy : MonoBehaviour {
 		else {
 			Debug.Log ("El nodo no existe");
 		}
+	}
+
+	//-------------------------------------------//
+	// Funciones comunes para todos los enemigos //
+	//-------------------------------------------//
+
+	// que hace si se hostia
+	void OnTriggerEnter2D (Collider2D collider) {
+		if ((collider.gameObject.CompareTag ("Bullet"))) {
+			if (healthPoints <= 0) {
+				GameManager.Instance.Score += score;
+				GameManager.Instance.Money += money;
+				Destroy (this.gameObject);
+			}
+		}
+	}
+
+	// recibe daño
+	void ReceiveDamage(int damage) {
+		healthPoints = healthPoints - damage;
 	}
 }

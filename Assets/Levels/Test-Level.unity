@@ -127,7 +127,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010795477732, guid: 8c562051dc8ec431caa365c4b7f955e9, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1000012224579500, guid: 8c562051dc8ec431caa365c4b7f955e9, type: 2}
       propertyPath: m_Name
@@ -224,7 +224,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000013450072484, guid: a0f8c6bcd0e924899be7efebb480e903, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114000013574868364, guid: a0f8c6bcd0e924899be7efebb480e903,
         type: 2}
@@ -334,7 +334,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!1001 &1035086639
 Prefab:
   m_ObjectHideFlags: 0
@@ -525,7 +525,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
 --- !u!1 &1049811132
 GameObject:
   m_ObjectHideFlags: 0
@@ -1000,11 +1000,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 114000014058513488, guid: 642bb8f5c2c4545aa9074ba100197b91,
-        type: 2}
-      propertyPath: grid
-      value: 
-      objectReference: {fileID: 1972153109}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 642bb8f5c2c4545aa9074ba100197b91, type: 2}
   m_IsPrefabParent: 0
@@ -1120,12 +1115,6 @@ GameObject:
   m_PrefabParentObject: {fileID: 1000011236196514, guid: a0f8c6bcd0e924899be7efebb480e903,
     type: 2}
   m_PrefabInternal: {fileID: 340123917}
---- !u!114 &1972153109 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114000013940633330, guid: a0f8c6bcd0e924899be7efebb480e903,
-    type: 2}
-  m_PrefabInternal: {fileID: 340123917}
-  m_Script: {fileID: 11500000, guid: e540df542730943a898082c38f163d6a, type: 3}
 --- !u!1001 &2022189011
 Prefab:
   m_ObjectHideFlags: 0

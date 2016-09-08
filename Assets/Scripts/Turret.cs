@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+// necesario para la lista de enemigos
+using System.Collections.Generic;
 // necesario para el fix de clickar a traves de los botones
 using UnityEngine.EventSystems;
 
@@ -16,6 +18,14 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 
 	// menu de mantenimiento de las torretas
 	public GameObject turretMenu;
+
+	// cacheo del transform
+	protected Transform myTransform;
+	protected Transform turretTop;
+
+	// enemigo mas cercano de la torreta
+	protected GameObject nearestEnemy;
+	protected float nearestEnemyDist;
 
 	// la torreta en la que pinchamos
 	private GameObject clickedTurret;
@@ -39,6 +49,73 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 		}
 	}
 
+	// cacheamos
+	void Awake(){
+		myTransform = transform;
+		turretTop = myTransform.Find("TurretTop");
+	}
+
+	// seteamos los valores por defecto
+	void Start(){
+		nearestEnemy = null;
+		nearestEnemyDist = 0f;
+	}
+
+	// y empezamos la fiesta
+	void Update(){
+
+		// si no tenemos enemigo
+		if (nearestEnemy == null) {
+			
+			// creamos un array para almacenar los enemigos
+			GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
+
+			// creamo la variable para almacenar las distancias
+			float enemyDist;
+
+			// comporbamos la distancia a cada enemigo
+			foreach (GameObject e in enemyList) {
+
+				// sacamos la distancia en las X y en las Y en absolutos
+				float distanceX = Mathf.Abs (myTransform.position.x - e.transform.position.x);
+				float distanceY = Mathf.Abs (myTransform.position.y - e.transform.position.y);
+
+				// dependiendo de cual es mayor, devolvemos una ecuacion u otra
+				if (distanceX < distanceY){
+					enemyDist = distanceY - distanceX;
+				}
+				else {
+					enemyDist = distanceX - distanceY;
+				}
+
+				// si no tenemos un enemigo fijado (primer ciclo o tras muerte) 
+				// o el nuevo enemigo esta mas cerca que el que tenemos
+				if (nearestEnemy == null || enemyDist < nearestEnemyDist){
+
+					// seteamos el nuevo enemigo y su distancia
+					nearestEnemy = e;
+					nearestEnemyDist = enemyDist;
+				}
+			}
+		}
+
+		// y si tenemos enemigo
+		else {
+
+			// si tenemos un enemigo y esta en rango, enfocamos la torreta
+			if (nearestEnemyDist <= range && nearestEnemy != null) {
+				turretTop.up = nearestEnemy.transform.position - myTransform.position;
+			}
+
+			// si el enemigo ha salido del rango o ha muerto
+			else {
+
+				// reseteamos el enemigo
+				nearestEnemy = null;
+			}
+		}
+	}
+
 	// usamos la interfaz IPointerClickHandler para que el click no atraviese
 	// al boton, haciendo que el menu desaparezca
 	#region IPointerClickHandler implementation
@@ -54,4 +131,5 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 	}
 
 	#endregion
+
 }

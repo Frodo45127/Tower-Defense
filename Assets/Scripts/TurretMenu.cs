@@ -27,18 +27,9 @@ public class TurretMenu : MonoBehaviour {
 	// torreta en la que hemos clickado
 	private GameObject clickedTurret;
 
-	//TODO: borrar esto cuando terminemos de apañar la segunda torreta
-	// costes de las torretas
-	public int costTurret2;
-
 	// cacheamos el grid y el dinero
 	void Awake(){
 		grid = GameObject.Find ("Ground").GetComponent<Grid> ();
-	}
-
-	// seteamos los costes de las torretas
-	void Start(){
-		costTurret2 = 200;
 	}
 
 	// recibimos el nodo donde colocar la torreta al abrir el menu y abrimos el menu
@@ -103,7 +94,7 @@ public class TurretMenu : MonoBehaviour {
 		} 
 		else if (turret == 1) {
 			turretToBuild = turret2;
-			costNewTurret = costTurret2;
+			costNewTurret = turret2.GetComponent<TurretTest2>().Cost;
 		}
 		else {
 			Debug.Log ("La torreta no existe.");

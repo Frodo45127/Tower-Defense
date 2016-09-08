@@ -1,19 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
-// necesario para el fix de clickar a traves de los botones
-using UnityEngine.EventSystems;
 
 //-----------------------------------------------------------------------
-// TurretTest.cs
+// TurretTest2.cs
 // 
-// Este script es el que se encarga del comportamiento de la torreta de pruebas.
+// Este script es el que se encarga del comportamiento de la segunda
+// torreta de pruebas.
 //
 // NOTA: las variables que se heredan de Turret (coste, rango, daño,...)
 // se ponen en el inspector (unity), no aquí.
 //
 //-----------------------------------------------------------------------
 
-public class TurretTest : Turret, IPointerClickHandler {
+public class TurretTest2 : Turret {
 
 	// la bala a disparar
 	public GameObject bullet;
