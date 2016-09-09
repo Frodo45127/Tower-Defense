@@ -39,7 +39,7 @@ public class TurretMenu : MonoBehaviour {
 		clickedNode = _clickedNode;
 
 		// movemos el menu sobre el nodo y hacemos que aparezca
-		turretSelectionMenu.transform.position = clickedNode.worldPosition;
+		turretSelectionMenu.transform.position = new Vector3(clickedNode.worldPosition.x, clickedNode.worldPosition.y, -8f);
 
 		// y ningún menu de torretas esta activo
 		if (!turretSelectionMenu.activeSelf && !turretManagementMenu.activeSelf) {
@@ -63,7 +63,7 @@ public class TurretMenu : MonoBehaviour {
 		clickedTurret = _clickedTurret;
 
 		// movemos el menu sobre la torreta y hacemos que aparezca
-		turretManagementMenu.transform.position = clickedTurret.transform.position;
+		turretManagementMenu.transform.position = new Vector3(clickedTurret.transform.position.x, clickedTurret.transform.position.y, -8f);
 
 		// y ningún menu de torretas esta activo
 		if (!turretSelectionMenu.activeSelf && !turretManagementMenu.activeSelf) {
@@ -78,7 +78,7 @@ public class TurretMenu : MonoBehaviour {
 			turretManagementMenu.SetActive (false);
 		}
 	}
-
+	// FIXME: si pinchas en los bordes de las zonas caminables puedes colocar una torreta en el camino. hay que arreglarlo
 	// Función para construir la torreta.
 	public void BuildTurret(int turret){
 

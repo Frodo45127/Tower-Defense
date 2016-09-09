@@ -47,6 +47,9 @@ public class Grid : MonoBehaviour {
 	// encuentra un enemigo
 	private float percentXoffset, percentYoffset;
 
+	// lista de sprites para pintar el fondo
+	public Sprite[] tileList;
+
 	// Inicializamos los valores necesarios
 	void Start(){
 		nodeDiameter = nodeRadius * 2;
@@ -89,6 +92,184 @@ public class Grid : MonoBehaviour {
 
 				// y añadimos el nodo a la lista de nodos en el grid 
 				grid [x, y] = new Node (gridWorldNodeCenter, x, y, isWalkable, isBuildable);
+			}
+		}
+
+		// y despues pintamos el fondo
+		PaintMeLikeOneOfYourFrenchGirls ();
+	}
+
+	// Funcion para poner las texturas de las narices al fondo
+	void PaintMeLikeOneOfYourFrenchGirls(){
+
+		// primero creamos un anillo para gobernarlos a todos
+		GameObject tileGroup = new GameObject ("TileList");
+
+		// por cada columna hasta llegar a la del nodo del final del grid
+		for (int x = 0; x < gridSizeX; x++){
+			// cogemos una celda
+			for (int y = 0; y < gridSizeY; y++){
+
+				// guardamos la celda o nodo
+				Node currentNode = grid [x, y];
+
+				// creamos un plano en blanco que ocupe lo que ocupa el nodo
+				GameObject tile = new GameObject("Tile");
+				SpriteRenderer sprite = tile.AddComponent<SpriteRenderer> ();
+				Transform tileTransform = tile.transform;
+				tileTransform.position = new Vector3(currentNode.worldPosition.x, currentNode.worldPosition.y, 0.1f);
+
+				// escalamos los cuadrados para que se ajusten al grid
+				tileTransform.localScale = new Vector2 (nodeDiameter * 1.6f, nodeDiameter * 1.6f);
+
+				// lo metemos como hijo de TileList
+				tileTransform.SetParent(tileGroup.transform);
+
+				// sacamos todos sus vecinos y los guardamos en una lista
+				List<Node> neighboursList = GetNeighbours(currentNode);
+
+				// ponemos una variable para ver el numero de conexiones caminables
+				int walkableConnection = 0;
+
+				// ahora que tenemos todos los nodos vecinos, empieza lo divertido
+				// primero miramos cuantos de los lados son caminables
+				foreach (Node n in neighboursList){
+					if (n.isWalkable){
+						walkableConnection++;
+					}	
+				}
+				// ATENCION: el orden de los nodos es el siguiente:
+				// - 0: izquierda
+				// - 1: abajo
+				// - 2: arriba
+				// - 3: derecha
+				// si no tiene conexiones con nada caminable o solo una
+				// FIXME: Arreglar el crash si un camino toca el borde de la grilla
+				if (walkableConnection == 0 || (walkableConnection == 1 && !currentNode.isWalkable) || !currentNode.isWalkable){
+					// es cesped
+					sprite.sprite = tileList [0];
+				}
+				// solo tiene una conexion y es caminable
+				else if (walkableConnection == 1 && currentNode.isWalkable){
+					// es un tope de camino
+					// si el de la izquierda es caminable
+					if (neighboursList [0].isWalkable) {
+						// es un tope desde la izquierda
+						sprite.sprite = tileList [4];
+						tileTransform.Rotate(Vector3.forward, 90f);
+					}
+					// si el de la derecha es caminable
+					else if (neighboursList [3].isWalkable) {
+						// es un tope desde la derecha
+						sprite.sprite = tileList [4];
+						tileTransform.Rotate(Vector3.forward, -90f);
+					}
+					// si el de arriba es caminable
+					else if (neighboursList [2].isWalkable) {
+						// es un tope desde arriba
+						sprite.sprite = tileList [4];
+					}
+					// si el caminable es el de abajo
+					else {
+						// es un tope desde abajo
+						sprite.sprite = tileList [4];
+					}
+				}
+				// si tiene dos conexiones es carretera recta o curva
+				else if (walkableConnection == 2 && currentNode.isWalkable){
+					// si el de la izquierda es caminable
+					if (neighboursList [0].isWalkable) {
+						// y el de la derecha tambien
+						if (neighboursList [3].isWalkable) {
+							// es una recta --
+							sprite.sprite = tileList [2];
+						}
+						// y si la de arriba tambien
+						else if (neighboursList [2].isWalkable){
+							// es una curva -!
+							sprite.sprite = tileList [1];
+							tileTransform.Rotate (Vector3.forward, 180f);
+						}
+						// y si la de abajo tambien
+						else if (neighboursList [1].isWalkable){
+							// es una curva -¡
+							sprite.sprite = tileList [1];
+							tileTransform.Rotate (Vector3.forward, -90f);
+						}
+						else {
+							Debug.Log("Error.");
+						}
+					}
+					// si el de la derecha es caminable
+					else if (neighboursList [3].isWalkable) {
+						// y si la de arriba tambien
+						if (neighboursList [2].isWalkable) {
+							// es una curva !-
+							sprite.sprite = tileList [1];
+							tileTransform.Rotate (Vector3.forward, 90f);
+						}
+						// y si la de abajo tambien
+						else if (neighboursList [1].isWalkable) {
+							// es una curva ¡-
+							sprite.sprite = tileList [1];
+						} 
+						else {
+							Debug.Log ("Error.");
+						}
+					}
+					// si el de arriba es caminable
+					else if (neighboursList [2].isWalkable) {
+						// y el de la abajo tambien
+						if (neighboursList [1].isWalkable) {
+							// es una recta I
+							sprite.sprite = tileList [2];
+							tileTransform.Rotate (Vector3.forward, 90f);
+						}
+						else {
+							Debug.Log ("Error.");
+						}
+					}
+					else {
+						Debug.Log ("Error.");
+					}
+				}
+				// si tiene 3 conexiones, es una T
+				else if (walkableConnection == 3 && currentNode.isWalkable){
+					// si el de la izquierda es caminable
+					if (neighboursList [0].isWalkable) {
+						// y el de la derecha tambien
+						if (neighboursList [3].isWalkable) {
+							//y el de arriba tambien lo es
+							if (neighboursList [2].isWalkable) {
+								// es un -!-
+								sprite.sprite = tileList [3];
+								tileTransform.Rotate (Vector3.forward, 90f);
+							}
+							// si no, es un -¡-
+							else {
+								sprite.sprite = tileList [3];
+								tileTransform.Rotate (Vector3.forward, -90f);
+							}
+						}
+						// y el de la derecha no lo es, es una -I
+						else {
+							sprite.sprite = tileList [3];
+							tileTransform.Rotate (Vector3.forward, 180f);
+						}
+					}
+					// si el de la izquierda no es caminable, es una I-
+					else {
+						sprite.sprite = tileList [3];
+					}
+				}
+				// si tiene 4, es un cruce de calles en -I-
+				else if (walkableConnection == 4 && currentNode.isWalkable){
+					sprite.sprite = tileList [5];
+				}
+				// si no cumple ninguna condicion especial, esta roto
+				else {
+					Debug.Log ("Algo hemos jodio al pintar el fondo.");
+				}
 			}
 		}
 	}
@@ -149,6 +330,7 @@ public class Grid : MonoBehaviour {
 		// y ahora devuelve la lista
 		return neighboursList;
 	}
+
 	// Funcion para mostrar gizmos, para ver mejor el grid y los nodos
 	void OnDrawGizmos() {
 

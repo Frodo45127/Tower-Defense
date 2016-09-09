@@ -51,10 +51,10 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011236196514}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_MotionVectors: 1
+  m_ReceiveShadows: 0
+  m_MotionVectors: 0
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
@@ -120,8 +120,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPath:
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   targetPath:
   - {fileID: 0}
 --- !u!114 &114000013940633330
@@ -143,3 +141,10 @@ MonoBehaviour:
     m_Bits: 512
   gridWorldSize: {x: 816, y: 816}
   nodeRadius: 17
+  tileList:
+  - {fileID: 21300000, guid: 7a9826c8fc9164cbcbc2a98d6240afee, type: 3}
+  - {fileID: 21300000, guid: d474516a1744944da88b98d33f954e1e, type: 3}
+  - {fileID: 21300000, guid: 933a11ab9d27e4a8eae908ac73d76ec5, type: 3}
+  - {fileID: 21300000, guid: 2a1a9f5cae65e4f2084d7faec7f96a56, type: 3}
+  - {fileID: 21300000, guid: 538c8de01f55a44b4ae36aed644b4a17, type: 3}
+  - {fileID: 21300000, guid: babc6e252d95c42fb8d4840035eb0bc6, type: 3}
