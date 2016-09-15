@@ -883,7 +883,7 @@ MonoBehaviour:
   startPosition: {fileID: 1042625772}
   enemySpawnList:
   - {fileID: 1000012640342440, guid: a21152806e25b5b488d4a1cae6b69f9a, type: 2}
-  boss: {fileID: 1000012640342440, guid: a21152806e25b5b488d4a1cae6b69f9a, type: 2}
+  boss: {fileID: 1000010053297328, guid: 3f2327da8a13e43be9912e8016917e70, type: 2}
 --- !u!4 &1186078295
 Transform:
   m_ObjectHideFlags: 0

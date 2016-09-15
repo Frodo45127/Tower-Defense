@@ -23,6 +23,10 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 	protected Transform myTransform;
 	protected Transform turretTop;
 
+	// cacheo de la lista de enemigos spawneados y del spawner
+	public List<GameObject> enemyList;
+	protected GameObject spawner;
+
 	// enemigo mas cercano de la torreta
 	protected GameObject nearestEnemy;
 	protected float nearestEnemyDist;
@@ -53,6 +57,8 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 	void Awake(){
 		myTransform = transform;
 		turretTop = myTransform.Find("TurretTop");
+		spawner = GameObject.Find("Spawner");
+		enemyList = spawner.GetComponent<Spawner> ().SpawnedEnemyList;
 	}
 
 	// seteamos los valores por defecto
@@ -67,34 +73,36 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 		// si no tenemos enemigo
 		if (nearestEnemy == null) {
 			
-			// creamos un array para almacenar los enemigos
-			GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
-
-			// creamo la variable para almacenar las distancias
+			// creamos la variable para almacenar las distancias
 			float enemyDist;
 
-			// comporbamos la distancia a cada enemigo
+			// comporbamos la distancia a cada enemigo de la lista de enemigos spawneados
 			foreach (GameObject e in enemyList) {
 
-				// sacamos la distancia en las X y en las Y en absolutos
-				float distanceX = Mathf.Abs (myTransform.position.x - e.transform.position.x);
-				float distanceY = Mathf.Abs (myTransform.position.y - e.transform.position.y);
+				// FIXME: esto funciona mal, no calcula el mas cercano ni comprueba si esta en rango
+				// si el enemigo existe
+				if (e != null) {
+					
+					// sacamos la distancia en las X y en las Y en absolutos
+					float distanceX = Mathf.Abs (myTransform.position.x - e.transform.position.x);
+					float distanceY = Mathf.Abs (myTransform.position.y - e.transform.position.y);
 
-				// dependiendo de cual es mayor, devolvemos una ecuacion u otra
-				if (distanceX < distanceY){
-					enemyDist = distanceY - distanceX;
-				}
-				else {
-					enemyDist = distanceX - distanceY;
-				}
+					// dependiendo de cual es mayor, devolvemos una ecuacion u otra
+					if (distanceX < distanceY){
+						enemyDist = distanceY - distanceX;
+					}
+					else {
+						enemyDist = distanceX - distanceY;
+					}
 
-				// si no tenemos un enemigo fijado (primer ciclo o tras muerte) 
-				// o el nuevo enemigo esta mas cerca que el que tenemos
-				if (nearestEnemy == null || enemyDist < nearestEnemyDist){
+					// si no tenemos un enemigo fijado (primer ciclo o tras muerte) 
+					// o el nuevo enemigo esta mas cerca que el que tenemos
+					if (nearestEnemy == null || enemyDist < nearestEnemyDist){
 
-					// seteamos el nuevo enemigo y su distancia
-					nearestEnemy = e;
-					nearestEnemyDist = enemyDist;
+						// seteamos el nuevo enemigo y su distancia
+						nearestEnemy = e;
+						nearestEnemyDist = enemyDist;
+					}
 				}
 			}
 		}
@@ -131,5 +139,4 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 	}
 
 	#endregion
-
 }

@@ -15,17 +15,20 @@ public class SpawnerTest : Spawner {
 	// Use this for initialization
 	void Start () {
 
+		// arrancamos el gamemanager si no esta arrancado y seteamos los ajustes del nivel
+		GameManager.Instance.SetLevelVariables (800, 0, 5);
+
 		// tiempo entre oleadas
 		timerWave = 1f;
-		timerWaveReset = 10f;
+		timerWaveReset = 2f;
 
 		// tiempo entre spawns en una misma oleada
 		timerSpawn = 0.4f;
-		timerSpawnReset = 5f;
+		timerSpawnReset = 0.4f;
 
 		// contador de oleadas
 		waveCounter = 0;
-		maxWaveCounter = 10;
+		maxWaveCounter = 2;
 
 		// número de unidades spawneadas por oleada y máximo
 		unitsSpawnedPerWave = -1;
@@ -70,7 +73,12 @@ public class SpawnerTest : Spawner {
 			else if (timerSpawn <= 0 && unitsSpawnedPerWave < maxUnitsSpawnedPerWave){
 				
 				// spawnea una unidad en el punto de inicio
-				Instantiate (enemySpawnList [0], spawnPosition, Quaternion.identity);
+				GameObject enemy = (GameObject)Instantiate (enemySpawnList [0], spawnPosition, Quaternion.identity);
+
+				// le añadimos a la lista de enemigos spawneados
+				spawnedEnemyList.Add (enemy);
+
+				// y sumamos uno a la cantidad de enemigos spawneados por oleada
 				unitsSpawnedPerWave++;
 
 				// resetea el timer del spawn de unidades
@@ -89,7 +97,8 @@ public class SpawnerTest : Spawner {
 
 		// spawnea al boss si ha terminado de spawnear a los demás
 		if (waveCounter == maxWaveCounter && bossSpawned == false && timerWave <= 0.0f) {
-			Instantiate (boss, new Vector3 (27.2f, 0, 0), Quaternion.identity);
+			GameObject enemy = (GameObject)Instantiate (boss, spawnPosition, Quaternion.identity);
+			spawnedEnemyList.Add (enemy);
 			bossSpawned = true;
 		}
 	}

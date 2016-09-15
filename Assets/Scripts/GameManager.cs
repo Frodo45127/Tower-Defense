@@ -67,6 +67,17 @@ public class GameManager : MonoBehaviour {
 			score = value;
 		}
 	}
+	// estos son los puntos de vida de tu base
+	[SerializeField]
+	private int baseHealthPoints;
+	public int BaseHealthPoints {
+		get {
+			return baseHealthPoints;
+		} 
+		set {
+			baseHealthPoints = value;
+		}
+	}
 	public string PlayerName { get; set;}
 
 
@@ -75,17 +86,28 @@ public class GameManager : MonoBehaviour {
 		IsFirstStart = true;
 	}
 
-	//inicializamos las variables únicas de la partida
-	void Start(){
-		ResetLevel ();
+	// funcion para reducir la vida de la base y perder la partida
+	public void EnemyAtTheGates(int damage) {
+
+		// si llega un enemigo a la base, perdemos vida
+		BaseHealthPoints -= damage;
+
+		// si nos quedamos sin puntos, hemos perdio
+		if (BaseHealthPoints <= 0) {
+			Debug.Log ("Hemos perdio.");
+
+			// ejecuta un gameover de manual
+			GameObject.Find ("Menus").GetComponent<InGameMenu> ().GameOver ();
+		}
 	}
 
 	// funcion para resetear las variables de la partida (dinero, puntos,...)
-	public void ResetLevel() {
+	public void SetLevelVariables(int _money, int _score, int _baseHealthPoints) {
 		// Reinicializamos todas las variables del jugador para la siguiente partida
-		Money = 800;
-		Score = 0;
+		Money = _money;
+		Score = _score;
 		PlayerName = "";
+		BaseHealthPoints = _baseHealthPoints;
 	}
 
 	// funcion para salir al menu principal
@@ -99,8 +121,6 @@ public class GameManager : MonoBehaviour {
 		else {
 			AddToHighScoreListSorted (PlayerName, Score);
 		}
-		// Al salir reinicializamos todas las variables del jugador para la siguiente partida
-		ResetLevel ();
 		// Volvemos al menú, después de dejar todo listo para otra partida.
 		SceneManager.LoadScene (0);
 	}

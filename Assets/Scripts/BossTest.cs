@@ -2,19 +2,19 @@
 using System.Collections;
 
 //-----------------------------------------------------------------------
-// EnemyTest.cs
+// BossTest.cs
 // 
-// Este script es el que define el comportamiento del bicho de pruebas.
+// Este script es el que define el comportamiento del boss de pruebas.
 // Por ahora el comportamiento es comun para todos, aqui solo va la
 // funcion Start().
 //
 //-----------------------------------------------------------------------
 
-public class EnemyTest : Enemy {
+public class BossTest : Enemy {
 
 	// Use this for initialization
 	void Start () {
-		
+
 		// cacheo del transform
 		myTransform = transform;
 
@@ -24,7 +24,7 @@ public class EnemyTest : Enemy {
 		score = 50;
 		money = 20;
 		damage = 1;
-		isBoss = false;
+		isBoss = true;
 
 		// cogemos la lista de nodos (camino) que haya en el spawner
 		pathToFollow = spawner.Path;

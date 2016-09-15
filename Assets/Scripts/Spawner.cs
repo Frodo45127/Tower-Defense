@@ -22,7 +22,12 @@ public class Spawner : MonoBehaviour {
 
 	// TODO: hacer que esto funcione con multiples caminos
 	// define el camino a seguir
-	public static List<Node> path;
+	protected List<Node> path;
+	public List<Node> Path {
+		get {
+			return path;
+		}
+	}
 
 	// define el lugar de donde salen los monstruos
 	public GameObject startPosition;
@@ -33,6 +38,18 @@ public class Spawner : MonoBehaviour {
 
 	// define al boss
 	public GameObject boss;
+
+	// lista de todos los enemigos spawneados en pantalla
+	[SerializeField]
+	protected List<GameObject> spawnedEnemyList;
+	public List<GameObject> SpawnedEnemyList {
+		get {
+			return spawnedEnemyList;
+		}
+		set {
+			spawnedEnemyList = value;
+		}
+	}
 
 	// tiempo entre oleadas
 	public float timerWave { get; protected set;}
@@ -52,6 +69,11 @@ public class Spawner : MonoBehaviour {
 
 	// check para ver si el boss ha spawneado
 	protected bool bossSpawned;
+	public bool BossSpawned {
+		get {
+			return bossSpawned;
+		} 
+	}
 
 	// abreviaturas
 	void Awake () {
