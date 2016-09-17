@@ -66,8 +66,8 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 		// si el nodo existe
 		if (clickedNode != null) {
 
-			// y es construible y no tiene torretas
-			if (clickedNode.isBuildable && !clickedNode.isBuildableAndHasATurret) {
+			// y es construible, no es camino y no tiene torretas
+			if (clickedNode.isBuildable && !clickedNode.isWalkable && !clickedNode.isBuildableAndHasATurret) {
 
 				// le decimos que intente abrirlo
 				turretMenu.SendMessage ("OpenTurretSelectionMenu", clickedNode);

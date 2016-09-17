@@ -40,7 +40,7 @@ Transform:
   m_GameObject: {fileID: 1000011236196514}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 150, y: 150, z: 150}
+  m_LocalScale: {x: 150, y: 150, z: 100}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
@@ -139,8 +139,8 @@ MonoBehaviour:
   unbuildableTerrain:
     serializedVersion: 2
     m_Bits: 512
-  gridWorldSize: {x: 816, y: 816}
-  nodeRadius: 17
+  gridWorldSize: {x: 1600, y: 1600}
+  nodeRadius: 20
   tileList:
   - {fileID: 21300000, guid: 7a9826c8fc9164cbcbc2a98d6240afee, type: 3}
   - {fileID: 21300000, guid: d474516a1744944da88b98d33f954e1e, type: 3}
@@ -148,3 +148,5 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2a1a9f5cae65e4f2084d7faec7f96a56, type: 3}
   - {fileID: 21300000, guid: 538c8de01f55a44b4ae36aed644b4a17, type: 3}
   - {fileID: 21300000, guid: babc6e252d95c42fb8d4840035eb0bc6, type: 3}
+  - {fileID: 21300000, guid: 83a8428fae6f442549a86a7b6060043f, type: 3}
+  - {fileID: 21300000, guid: 41c45771dafe14d6ea1ccbf85e6eddf6, type: 3}
