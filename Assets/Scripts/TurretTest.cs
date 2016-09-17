@@ -25,7 +25,7 @@ public class TurretTest : Turret, IPointerClickHandler {
 	void FixedUpdate() {
 
 		// si tenemos enemigo
-		if (nearestEnemy != null) {
+		if (targetEnemy != null) {
 
 			// haz un temporizador
 			timerShot -= Time.deltaTime;

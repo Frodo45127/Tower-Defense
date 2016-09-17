@@ -28,8 +28,7 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 	protected GameObject spawner;
 
 	// enemigo mas cercano de la torreta
-	protected GameObject nearestEnemy;
-	protected float nearestEnemyDist;
+	protected GameObject targetEnemy;
 
 	// la torreta en la que pinchamos
 	private GameObject clickedTurret;
@@ -61,65 +60,25 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 		enemyList = spawner.GetComponent<Spawner> ().SpawnedEnemyList;
 	}
 
-	// seteamos los valores por defecto
-	void Start(){
-		nearestEnemy = null;
-		nearestEnemyDist = 0f;
-	}
-
 	// y empezamos la fiesta
 	void Update(){
 
 		// si no tenemos enemigo
-		if (nearestEnemy == null) {
-			
-			// creamos la variable para almacenar las distancias
-			float enemyDist;
+		if (targetEnemy == null) {
 
-			// comporbamos la distancia a cada enemigo de la lista de enemigos spawneados
-			foreach (GameObject e in enemyList) {
-
-				// FIXME: esto funciona mal, no calcula el mas cercano ni comprueba si esta en rango
-				// si el enemigo existe
-				if (e != null) {
-					
-					// sacamos la distancia en las X y en las Y en absolutos
-					float distanceX = Mathf.Abs (myTransform.position.x - e.transform.position.x);
-					float distanceY = Mathf.Abs (myTransform.position.y - e.transform.position.y);
-
-					// dependiendo de cual es mayor, devolvemos una ecuacion u otra
-					if (distanceX < distanceY){
-						enemyDist = distanceY - distanceX;
-					}
-					else {
-						enemyDist = distanceX - distanceY;
-					}
-
-					// si no tenemos un enemigo fijado (primer ciclo o tras muerte) 
-					// o el nuevo enemigo esta mas cerca que el que tenemos
-					if (nearestEnemy == null || enemyDist < nearestEnemyDist){
-
-						// seteamos el nuevo enemigo y su distancia
-						nearestEnemy = e;
-						nearestEnemyDist = enemyDist;
-					}
-				}
-			}
+			// buscamos uno
+			targetEnemy = FindNearestEnemy ();
 		}
 
-		// y si tenemos enemigo
+		// y si tenemos un enemigo
 		else {
 
-			// si tenemos un enemigo y esta en rango, enfocamos la torreta
-			if (nearestEnemyDist <= range && nearestEnemy != null) {
-				turretTop.up = nearestEnemy.transform.position - myTransform.position;
-			}
+			// calculamos la distancia a la que esta
+			float enemyDist = Vector3.Distance(myTransform.position, targetEnemy.transform.position);
 
-			// si el enemigo ha salido del rango o ha muerto
-			else {
-
-				// reseteamos el enemigo
-				nearestEnemy = null;
+			// y si esta en rango, enfocamos la torreta
+			if (enemyDist <= range) {
+				turretTop.up = targetEnemy.transform.position - myTransform.position;
 			}
 		}
 	}
@@ -139,4 +98,43 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 	}
 
 	#endregion
+
+	// funcion para encontrar al enemigo mas cercano
+	GameObject FindNearestEnemy(){
+		
+		// creamos las variable para almacenar las distancias y los enemigos
+		float enemyDist;
+		GameObject nearestEnemy = null;
+		float nearestEnemyDist = 0f;
+
+		// comporbamos la distancia a cada enemigo de la lista de enemigos spawneados
+		foreach (GameObject e in enemyList) {
+
+			// si el enemigo existe
+			if (e != null) {
+
+				// sacamos la distancia entre la torreta y el enemigo
+				float distance = Vector3.Distance (myTransform.position, e.transform.position);
+
+				// si esta dentro del rango
+				if (distance <= range) {
+
+					// guardamos su distancia
+					enemyDist = distance;
+
+					// si no tenemos un objetivo previo o esta mas cerca que los demas enemigos que 
+					// ya hemos comprobado
+					if (nearestEnemy == null || enemyDist < nearestEnemyDist){
+
+						// seteamos el nuevo enemigo y su distancia
+						nearestEnemy = e;
+						nearestEnemyDist = enemyDist;
+					}
+				}
+			}
+		}
+
+		// devolvemos el enemigo mas cercano
+		return nearestEnemy;
+	}
 }

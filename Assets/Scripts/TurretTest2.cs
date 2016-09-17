@@ -24,7 +24,7 @@ public class TurretTest2 : Turret {
 	void FixedUpdate() {
 
 		// si tenemos enemigo
-		if (nearestEnemy != null) {
+		if (targetEnemy != null) {
 
 			// haz un temporizador
 			timerShot -= Time.deltaTime;
