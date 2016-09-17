@@ -80,6 +80,11 @@ public class Turret : MonoBehaviour, IPointerClickHandler {
 			if (enemyDist <= range) {
 				turretTop.up = targetEnemy.transform.position - myTransform.position;
 			}
+
+			// si ya no esta en rango, olvidalo
+			else {
+				targetEnemy = null;
+			}
 		}
 	}
 

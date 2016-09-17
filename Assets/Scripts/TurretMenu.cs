@@ -12,7 +12,7 @@ using System.Collections;
 public class TurretMenu : MonoBehaviour {
 
 	// añadimos las torretas a instanciar
-	public GameObject turret1, turret2;
+	public GameObject barricade, turret1, turret2;
 
 	// menu de seleccion de torretas y menu de manejo de torretas
 	public GameObject turretSelectionMenu;
@@ -78,7 +78,7 @@ public class TurretMenu : MonoBehaviour {
 			turretManagementMenu.SetActive (false);
 		}
 	}
-	// FIXME: si pinchas en los bordes de las zonas caminables puedes colocar una torreta en el camino. hay que arreglarlo
+
 	// Función para construir la torreta.
 	public void BuildTurret(int turret){
 
@@ -164,5 +164,22 @@ public class TurretMenu : MonoBehaviour {
 
 		// despues de destruir la torreta, oculta el menu
 		turretManagementMenu.SetActive (false);
+	}
+
+	// Funcion para construir barricadas
+	public void BuildBarricade(Node _clickedNode) {
+
+		// guardamos el nodo
+		clickedNode = _clickedNode;
+
+		// preparamos el nodo para tener la barricada
+		clickedNode.isWalkable = false;
+		clickedNode.isBuildableAndHasABarricade = true;
+
+		// colocamos la barricada
+		Instantiate (barricade, new Vector3(clickedNode.worldPosition.x, clickedNode.worldPosition.y, -5f), Quaternion.identity);
+
+		// restamos la barricada de las que tenemos
+		GameManager.Instance.Barricades--;
 	}
 }

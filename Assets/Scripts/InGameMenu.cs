@@ -22,6 +22,13 @@ public class InGameMenu : MonoBehaviour {
 	// variable interna para la puntuacion
 	private string score;
 
+	// texto en el que van las barricadas restantes
+	private Text barricadeCounter;
+
+	void Awake() {
+		barricadeCounter = GameObject.Find ("BarricadesLeft").GetComponent<Text> ();
+	}
+
 	// Use this for initialization
 	void Start () {
 
@@ -33,10 +40,28 @@ public class InGameMenu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		// si todavia no hemos empezado
+		if (!GameManager.Instance.isPlayerReady) {
+
+			// FIXME: ineficiente. Hay que optimizarlo.
+			// manten actualizado el contador de barricadas
+			barricadeCounter.text = "Te quedan " + GameManager.Instance.Barricades + " barricadas.";
+		}
+
 		// si pulsamos escape, pausa el juego
 		if (Input.GetKeyDown(KeyCode.Escape)){
 			PauseGame ();
 		}
+	}
+
+	// función para dar comienzo a la partida, tras colocar las barricadas
+	public void StartGame() {
+
+		// dile al gamemanager que estamos listos para empezar
+		GameManager.Instance.isPlayerReady = true;
+
+		// y oculta la UI que permite iniciar el juego (el boton y el contador de barricadas)
+		GameObject.Find ("StartGameMenu").SetActive(false);
 	}
 
 	// función que controla el pausado del juego

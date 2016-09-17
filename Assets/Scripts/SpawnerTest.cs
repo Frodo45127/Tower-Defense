@@ -16,7 +16,7 @@ public class SpawnerTest : Spawner {
 	void Start () {
 
 		// arrancamos el gamemanager si no esta arrancado y seteamos los ajustes del nivel
-		GameManager.Instance.SetLevelVariables (800, 0, 5);
+		GameManager.Instance.SetLevelVariables (800, 0, 5, 2);
 
 		// tiempo entre oleadas
 		timerWave = 1f;
@@ -36,70 +36,5 @@ public class SpawnerTest : Spawner {
 
 		// check para ver si el boss ha spawneado
 		bossSpawned = false;
-	}
-
-	// Update is called once per frame
-	void Update () {
-
-		// actualiza los timers para las oleadas y los spawns
-		timerWave -= Time.deltaTime;
-		timerSpawn -= Time.deltaTime;
-
-		// si el timer de oleada llega a cero y han pasado menos del tope de oleadas
-		if (timerWave <= 0 && waveCounter < maxWaveCounter){
-
-			// si no ha salido ninguna oleada, saca el camino a seguir y guardalo
-			if (unitsSpawnedPerWave == -1) {
-
-				// sacamos el camino a seguir
-				pathfinder.FindShortestPathFromAllSources ();
-
-				// si todo ha salido bien y tenemos un camino en la lista de caminos
-				if (grid.pathList != null) {
-					
-					// guardamos en una lista el camino a seguir
-					path = ground.GetComponent<Grid>().pathList [0];
-				}
-				// si no, tenemos un problema
-				else {
-					Debug.Log ("Algo ha salido mal, no hay camino");
-				}
-
-				// y sumamos uno para que empiece la ronda de spawn normal
-				unitsSpawnedPerWave++;
-			}
-
-			// si el timer de los spawns llega a cero y han spawneado menos del máximo de unidades
-			else if (timerSpawn <= 0 && unitsSpawnedPerWave < maxUnitsSpawnedPerWave){
-				
-				// spawnea una unidad en el punto de inicio
-				GameObject enemy = (GameObject)Instantiate (enemySpawnList [0], spawnPosition, Quaternion.identity);
-
-				// le añadimos a la lista de enemigos spawneados
-				spawnedEnemyList.Add (enemy);
-
-				// y sumamos uno a la cantidad de enemigos spawneados por oleada
-				unitsSpawnedPerWave++;
-
-				// resetea el timer del spawn de unidades
-				timerSpawn = timerSpawnReset;
-			}
-
-			// si ha terminado de spawnear las unidades de la oleada
-			else if (unitsSpawnedPerWave >= maxUnitsSpawnedPerWave) {
-				
-				// resetea el timer de oleada y el contador de unidades, y aumenta en uno el contador de oleadas
-				timerWave = timerWaveReset;
-				unitsSpawnedPerWave = 0;
-				waveCounter++;
-			}
-		}
-
-		// spawnea al boss si ha terminado de spawnear a los demás
-		if (waveCounter == maxWaveCounter && bossSpawned == false && timerWave <= 0.0f) {
-			GameObject enemy = (GameObject)Instantiate (boss, spawnPosition, Quaternion.identity);
-			spawnedEnemyList.Add (enemy);
-			bossSpawned = true;
-		}
 	}
 }

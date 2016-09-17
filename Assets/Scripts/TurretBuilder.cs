@@ -22,8 +22,9 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 	// canvas donde estan los menuses
 	public GameObject turretMenu;
 
-	// variable para el cacheo del grid
+	// variables para el cacheo del grid y del pathfinder
 	private Grid grid;
+	private Pathfinder pathfinder;
 
 	// variable para el nodo clickeado
 	private Node clickedNode;
@@ -31,6 +32,7 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 	// en el awake cacheamos lo necesario
 	void Awake(){
 		grid = GetComponent<Grid>();
+		pathfinder = GetComponent<Pathfinder> ();
 	}
 
 	// usamos la interfaz IPointerClickHandler para que el click no atraviese
@@ -63,8 +65,8 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 			clickedNode = grid.GetNodeFromWorldPosition (clickedMousePositionInWorldSpace);
 		}
 
-		// si el nodo existe
-		if (clickedNode != null) {
+		// si el nodo existe y la partida ha empezado
+		if (clickedNode != null && GameManager.Instance.isPlayerReady) {
 
 			// y es construible, no es camino y no tiene torretas
 			if (clickedNode.isBuildable && !clickedNode.isWalkable && !clickedNode.isBuildableAndHasATurret) {
@@ -82,6 +84,58 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 			else {
 				Debug.Log("Aqui no se puede construir.");
 			}
+		}
+
+		// si el nodo existe y la partida no ha empezado
+		else if (clickedNode != null && !GameManager.Instance.isPlayerReady) {
+
+			// y el nodo es caminable, construible y no tiene una barricada construida
+			if (clickedNode.isWalkable && clickedNode.isBuildable && !clickedNode.isBuildableAndHasABarricade) {
+
+				// si quedan barricadas
+				if (GameManager.Instance.Barricades > 0) {
+
+					// calculamos si, tras construir la barricada habria un camino libre:
+					// seteamos el nodo como no caminable
+					clickedNode.isWalkable = false;
+
+					// buscamos el camino mas corto
+					pathfinder.FindShortestPathFromAllSources ();
+
+					// devolvemos el nodo a su estado original
+					clickedNode.isWalkable = true;
+
+					// si existe al menos un camino de principio a fin
+					if (grid.pathList.Count > 0) {
+						
+						// construye la barricada
+						turretMenu.SendMessage ("BuildBarricade", clickedNode);
+					}
+
+					// si no existe al menos un camino
+					else {
+
+						// no hagas nada
+						Debug.Log ("Esto bloquea los caminos, asi que no se puede construir aquí.");
+					}
+				}
+				// si no quedan barricadas, no hagas nada
+				else {
+					Debug.Log ("No quedan barricadas.");
+				}
+			}
+
+			// si tiene una barricada (en principio con comprobar esto vale, pues que
+			// tenga una barricada implica que es caminable y construible)
+			else if (clickedNode.isBuildableAndHasABarricade) {
+				Debug.Log ("Ya hay una barricada, asi que dale a la barricada.");
+			}
+		}
+
+		// si no se cumple nada de lo anterior
+		else {
+			// do nothing, succesfully
+			Debug.Log ("Nu se, no has na por si acaso.");
 		}
 	}
 

@@ -16,7 +16,6 @@ public class Enemy : MonoBehaviour {
 	// cacheo
 	protected Transform myTransform;
 	protected Spawner spawner;
-	protected InGameMenu menus;
 
 	// lista de nodos que forman el camino a seguir y nodo actual
 	protected List<Node> pathToFollow;
@@ -42,14 +41,10 @@ public class Enemy : MonoBehaviour {
 	// vida del enemigo
 	[SerializeField]
 	protected int healthPoints;
-
-	// variable para saber si es un boss o no
-	protected bool isBoss;
 		
 	// cacheamos
 	void Awake() {
 		spawner = GameObject.Find ("Spawner").GetComponent<Spawner> ();
-		menus = GameObject.Find ("Menus").GetComponent<InGameMenu> ();
 	}
 	// aqui movemos al enemigo por el camino
 	void FixedUpdate() {
@@ -83,8 +78,13 @@ public class Enemy : MonoBehaviour {
 				else {
 					Debug.Log ("Se acabo el camino, te destruyes y le quitas un puntito al jugador.");
 
-					// hacemos daño a la base y nos destruimos
+					// hacemos daño a la base
 					GameManager.Instance.EnemyAtTheGates(damage);
+
+					// eliminamos al bicho de la lista de enemigos spawneados
+					spawner.SpawnedEnemyList.Remove(this.gameObject);
+
+					// y destruimos al bicho
 					Destroy (this.gameObject);
 				}
 			}
@@ -109,13 +109,6 @@ public class Enemy : MonoBehaviour {
 			// el jugador gana puntos y dinero
 			GameManager.Instance.Score += score;
 			GameManager.Instance.Money += money;
-
-			// si somos el boss
-			if (isBoss == true) {
-
-				// el jugador ha ganado
-				menus.LevelCompleted();
-			}
 
 			// eliminamos al bicho de la lista de enemigos spawneados
 			spawner.SpawnedEnemyList.Remove(this.gameObject);

@@ -24,7 +24,6 @@ public class EnemyTest : Enemy {
 		score = 50;
 		money = 20;
 		damage = 1;
-		isBoss = false;
 
 		// cogemos la lista de nodos (camino) que haya en el spawner
 		pathToFollow = spawner.Path;

@@ -78,8 +78,21 @@ public class GameManager : MonoBehaviour {
 			baseHealthPoints = value;
 		}
 	}
+	// estas son las barricadas que te quedan
+	[SerializeField]
+	private int barricades;
+	public int Barricades {
+		get {
+			return barricades;
+		} 
+		set {
+			barricades = value;
+		}
+	}
+
 	public string PlayerName { get; set;}
 
+	public bool isPlayerReady;
 
 	// inicializamos la variable para el logo con el constructor
 	public GameManager(){
@@ -102,12 +115,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	// funcion para resetear las variables de la partida (dinero, puntos,...)
-	public void SetLevelVariables(int _money, int _score, int _baseHealthPoints) {
+	public void SetLevelVariables(int _money, int _score, int _baseHealthPoints, int _barricades) {
 		// Reinicializamos todas las variables del jugador para la siguiente partida
 		Money = _money;
 		Score = _score;
 		PlayerName = "";
 		BaseHealthPoints = _baseHealthPoints;
+		Barricades = _barricades;
 	}
 
 	// funcion para salir al menu principal

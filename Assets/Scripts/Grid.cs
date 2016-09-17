@@ -95,8 +95,26 @@ public class Grid : MonoBehaviour {
 			}
 		}
 
-		// y despues pintamos el fondo
+		// despues pintamos el fondo
 		PaintMeLikeOneOfYourFrenchGirls ();
+
+		// y para terminar, desactivamos los colliders de los caminos,
+		// para hacer que los caminos sean clickables
+
+		// primero hacemos una lista con todos los gameobjects en el nivel
+		GameObject[] GameObjectList = (GameObject[])GameObject.FindObjectsOfType(typeof(GameObject));
+
+		// comprobamos cada uno para ver si pertenece a la capa WalkableTerrain
+		foreach (GameObject go in GameObjectList) {
+
+			// si es de la capa WalkableTerrain (la 8)
+			if (go.layer == 8) {
+
+				// desactiva el sprite renderer y el collider para que no molesten
+				go.GetComponent<SpriteRenderer> ().enabled = false;
+				go.GetComponent<BoxCollider> ().enabled = false;
+			}
+		}
 	}
 
 	// Funcion para poner las texturas de las narices al fondo
@@ -246,6 +264,7 @@ public class Grid : MonoBehaviour {
 						else {
 							// es un tope desde abajo
 							sprite.sprite = tileList [4];
+							tileTransform.Rotate(Vector3.forward, 180f);
 						}
 					}
 					// si tiene dos conexiones es carretera recta o curva
