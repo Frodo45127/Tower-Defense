@@ -1,9 +1,0 @@
-- Cosas pendientes:
-- Hacer que el enemigo avance y reciba daño; -- hecho
-- Implementar el pathfinding del enemigo. -- hecho
-- Crear un prefab de un enemigo --hecho
-- Crear un prefab de una torreta con cañon --hecho
-- Crear un prefab de una torreta con metralleta
-- Crear un prefab de un bloqueo (o barricada).
-- Crear una pantalla de victoria (similar a la de pausa, pero que deje meter un nombre en lugar de continuar el juego) -- hecho
-- Implementar un sistema de puntuacion y dinero (matas a un enemigo, recibes dinero y puntos, gastas dinero por poner torretas, pierdes puntos por cada enemigo que pase sin morir)
