@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+// necesario para usar las listas
+using System.Collections.Generic;
 
 //-----------------------------------------------------------------------
 // TurretMenu.cs
@@ -12,7 +14,15 @@ using System.Collections;
 public class TurretMenu : MonoBehaviour {
 
 	// añadimos las torretas a instanciar
-	public GameObject barricade, turret1, turret2;
+	public GameObject turret1, turret2;
+
+	// y el array con las barricadas a usar
+	// ATENCION: el orden de las barricadas es el siguiente:
+	// - 0: horizontal
+	// - 1: vertical
+	// - 2: inclinada de arriba a abajo
+	// - 3: inclinada de abajo a arriba
+	public GameObject[] barricadeList;
 
 	// menu de seleccion de torretas y menu de manejo de torretas
 	public GameObject turretSelectionMenu;
@@ -176,8 +186,75 @@ public class TurretMenu : MonoBehaviour {
 		clickedNode.isWalkable = false;
 		clickedNode.isBuildableAndHasABarricade = true;
 
-		// colocamos la barricada
-		Instantiate (barricade, new Vector3(clickedNode.worldPosition.x, clickedNode.worldPosition.y, -5f), Quaternion.identity);
+		// comprobamos los nodos adyacentes para ver cómo debemos orientar la barricada
+		// para ello, primero sacamos los nodos adyacentes
+		List<Node> neighboursList = grid.GetNeighbours (clickedNode);
+
+		// creamos la variable en la que guardaremos la barricada a spawnear
+		GameObject barricadeToInstantiate = null;
+
+		// despues comprobamos las posibles orientaciones (max: 2 caminos)
+		// ATENCION: el orden de los nodos es el siguiente:
+		// - 0: izquierda
+		// - 1: abajo
+		// - 2: arriba
+		// - 3: derecha
+		// Y el de las barricadas el siguiente:
+		// - 0: horizontal
+		// - 1: vertical
+		// - 2: inclinada de arriba a abajo
+		// - 3: inclinada de abajo a arriba
+		// si no tiene conexiones con nada caminable o solo una
+		// si el de la izquierda es caminable
+		if (neighboursList[0].isWalkable) {
+			
+			// y el de la derecha tambien
+			if (neighboursList [3].isWalkable){
+				// entonces es una barricada horizontal
+				barricadeToInstantiate = barricadeList [0];
+			}
+			// y el de abajo tambien
+			else if (neighboursList [1].isWalkable){
+				// entonces es una barricada en diagonal de arriba a abajo
+				barricadeToInstantiate = barricadeList [2];
+			}
+			// y el de arriba tambien
+			else if (neighboursList [2].isWalkable){
+				// entonces es una barricada en diagonal de abajo a arriba
+				barricadeToInstantiate = barricadeList [3];
+			}
+		}
+		// si el de la derecha es caminable
+		else if (neighboursList [3].isWalkable){
+			
+			// y el de arriba tambien
+			if (neighboursList [2].isWalkable){
+				// entonces es una barricada en diagonal de arriba a abajo
+				barricadeToInstantiate = barricadeList [2];
+			}
+			// y el de abajo tambien
+			if (neighboursList [1].isWalkable){
+				// entonces es una barricada en diagonal de abajo a arriba
+				barricadeToInstantiate = barricadeList [3];
+			}
+		}
+		// si el de arriba y el de abajo son caminables
+		else if (neighboursList [1].isWalkable && neighboursList [2].isWalkable){
+			// entonces es una vertical
+			barricadeToInstantiate = barricadeList [1];
+		}
+		// y si no, error
+		else {
+			Debug.Log("Error, orientación desconocida.");
+			barricadeToInstantiate = null;
+		}
+
+		// si todo ha salido bien y tenemos una barricada lista
+		if (barricadeToInstantiate != null) {
+			
+			// colocamos la barricada
+			Instantiate (barricadeToInstantiate, new Vector2(clickedNode.worldPosition.x, clickedNode.worldPosition.y), Quaternion.identity);
+		}
 
 		// restamos la barricada de las que tenemos
 		GameManager.Instance.Barricades--;

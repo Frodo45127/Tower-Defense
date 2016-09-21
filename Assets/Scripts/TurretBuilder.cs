@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+// necesario para usar las listas
+using System.Collections.Generic;
 // necesario para el fix de clickar a traves de los botones
 using UnityEngine.EventSystems;
 
@@ -92,36 +94,60 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 			// y el nodo es caminable, construible y no tiene una barricada construida
 			if (clickedNode.isWalkable && clickedNode.isBuildable && !clickedNode.isBuildableAndHasABarricade) {
 
-				// si quedan barricadas
-				if (GameManager.Instance.Barricades > 0) {
+				// sacamos todos sus vecinos y los guardamos en una lista
+				List<Node> neighboursList = grid.GetNeighbours(clickedNode);
 
-					// calculamos si, tras construir la barricada habria un camino libre:
-					// seteamos el nodo como no caminable
-					clickedNode.isWalkable = false;
+				// ponemos una variable para ver el numero de conexiones caminables
+				int walkableConnection = 0;
 
-					// buscamos el camino mas corto
-					pathfinder.FindShortestPathFromAllSources ();
+				// y con un foreach miramos cuantos vecinos son caminables
+				foreach (Node n in neighboursList){
+					if (n.isWalkable){
+						walkableConnection++;
+					}	
+				}
 
-					// devolvemos el nodo a su estado original
-					clickedNode.isWalkable = true;
+				// si hay menos de 3 caminables
+				if (walkableConnection < 3){
+					
+					// y quedan barricadas
+					if (GameManager.Instance.Barricades > 0) {
 
-					// si existe al menos un camino de principio a fin
-					if (grid.pathList.Count > 0) {
-						
-						// construye la barricada
-						turretMenu.SendMessage ("BuildBarricade", clickedNode);
+						// calculamos si, tras construir la barricada habria un camino libre:
+						// seteamos el nodo como no caminable
+						clickedNode.isWalkable = false;
+
+						// buscamos el camino mas corto
+						pathfinder.FindShortestPathFromAllSources ();
+
+						// devolvemos el nodo a su estado original
+						clickedNode.isWalkable = true;
+
+						// si existe al menos un camino de principio a fin
+						if (grid.pathList.Count > 0) {
+
+							// construye la barricada
+							turretMenu.SendMessage ("BuildBarricade", clickedNode);
+						}
+
+						// si no existe al menos un camino
+						else {
+
+							// no hagas nada
+							Debug.Log ("Esto bloquea los caminos, asi que no se puede construir aquí.");
+						}
 					}
-
-					// si no existe al menos un camino
+					// y no quedan barricadas, no hagas nada
 					else {
-
-						// no hagas nada
-						Debug.Log ("Esto bloquea los caminos, asi que no se puede construir aquí.");
+						Debug.Log ("No quedan barricadas.");
 					}
 				}
-				// si no quedan barricadas, no hagas nada
+
+				// si hay 3 o mas conexiones caminables
 				else {
-					Debug.Log ("No quedan barricadas.");
+					
+					// es un cruce, así que no se pueden construir barricadas
+					Debug.Log ("No se pueden hacer barricadas en un cruce.");
 				}
 			}
 

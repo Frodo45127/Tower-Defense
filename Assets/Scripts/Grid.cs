@@ -123,6 +123,14 @@ public class Grid : MonoBehaviour {
 		// primero creamos un anillo para gobernarlos a todos
 		GameObject tileGroup = new GameObject ("TileList");
 
+		// despues creamos otro por cada tipo de tile, y los atamos a la oscuridad
+		GameObject tileGroupMountains = new GameObject ("Mountains");
+		GameObject tileGroupWalls = new GameObject ("Walls");
+		GameObject tileGroupOtherTiles = new GameObject ("OtherTiles");
+		tileGroupMountains.transform.SetParent(tileGroup.transform);
+		tileGroupWalls.transform.SetParent(tileGroup.transform);
+		tileGroupOtherTiles.transform.SetParent(tileGroup.transform);
+
 		// por cada columna hasta llegar a la del nodo del final del grid
 		for (int x = 0; x < gridSizeX; x++){
 
@@ -143,14 +151,14 @@ public class Grid : MonoBehaviour {
 					continue;
 				}
 
+				// si llegamos hasta aqui, guardamos la celda o nodo
+				Node currentNode = grid [x, y];
+
 				// si esa celda esta en un lado de la pantalla
 				if (x < 4 || x > 35) {
 
-					// guardamos la celda o nodo
-					Node currentNode = grid [x, y];
-
 					// creamos un plano en blanco que ocupe lo que ocupa el nodo
-					GameObject tile = new GameObject("Mountain");
+					GameObject tile = new GameObject("MountainX" + x + "Y" + y);
 					SpriteRenderer sprite = tile.AddComponent<SpriteRenderer> ();
 					Transform tileTransform = tile.transform;
 					tileTransform.position = new Vector3(currentNode.worldPosition.x, currentNode.worldPosition.y, 0.1f);
@@ -159,7 +167,7 @@ public class Grid : MonoBehaviour {
 					tileTransform.localScale = new Vector2 (nodeDiameter * 1.6f, nodeDiameter * 1.6f);
 
 					// lo metemos como hijo de TileList
-					tileTransform.SetParent(tileGroup.transform);
+					tileTransform.SetParent(tileGroupMountains.transform);
 
 					// seteamos el nodo como no construible
 					currentNode.isBuildable = false;
@@ -168,14 +176,11 @@ public class Grid : MonoBehaviour {
 					sprite.sprite = tileList [7];
 				}
 
-				// si la celda esta cerca del borde, es un muro
-				else if (y == 10 || y == 29) {
-					
-					// guardamos la celda o nodo
-					Node currentNode = grid [x, y];
+				// si la celda esta cerca del borde y no es caminable, es un muro
+				else if ((y == 10 || y == 29) && !currentNode.isWalkable) {
 
 					// creamos un plano en blanco que ocupe lo que ocupa el nodo
-					GameObject tile = new GameObject("Wall");
+					GameObject tile = new GameObject("WallX" + x + "Y" + y);
 					SpriteRenderer sprite = tile.AddComponent<SpriteRenderer> ();
 					Transform tileTransform = tile.transform;
 					tileTransform.position = new Vector3(currentNode.worldPosition.x, currentNode.worldPosition.y, 0.1f);
@@ -184,7 +189,7 @@ public class Grid : MonoBehaviour {
 					tileTransform.localScale = new Vector2 (nodeDiameter * 1.6f, nodeDiameter * 1.6f);
 
 					// lo metemos como hijo de TileList
-					tileTransform.SetParent(tileGroup.transform);
+					tileTransform.SetParent(tileGroupWalls.transform);
 
 					// seteamos el nodo como no construible
 					currentNode.isBuildable = false;
@@ -195,11 +200,9 @@ public class Grid : MonoBehaviour {
 
 				// y si no cumple ninguna de las anteriores, esta en la pantalla y hay que pintarlo
 				else {
-					// guardamos la celda o nodo
-					Node currentNode = grid [x, y];
 
 					// creamos un plano en blanco que ocupe lo que ocupa el nodo
-					GameObject tile = new GameObject("Tile");
+					GameObject tile = new GameObject("TileX" + x + "Y" + y);
 					SpriteRenderer sprite = tile.AddComponent<SpriteRenderer> ();
 					Transform tileTransform = tile.transform;
 					tileTransform.position = new Vector3(currentNode.worldPosition.x, currentNode.worldPosition.y, 0.1f);
@@ -208,7 +211,7 @@ public class Grid : MonoBehaviour {
 					tileTransform.localScale = new Vector2 (nodeDiameter * 1.6f, nodeDiameter * 1.6f);
 
 					// lo metemos como hijo de TileList
-					tileTransform.SetParent(tileGroup.transform);
+					tileTransform.SetParent(tileGroupOtherTiles.transform);
 
 					// si la celda esta por encima del muro superior o por debajo del inferior
 					if (y < 10 || y > 29) {
