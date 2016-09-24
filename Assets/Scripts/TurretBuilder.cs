@@ -70,8 +70,8 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 		// si el nodo existe y la partida ha empezado
 		if (clickedNode != null && GameManager.Instance.isPlayerReady) {
 
-			// y es construible, no es camino y no tiene torretas
-			if (clickedNode.isBuildable && !clickedNode.isWalkable && !clickedNode.isBuildableAndHasATurret) {
+			// y es construible, no es camino y no tiene torretas ni barricadas
+			if (clickedNode.isBuildable && !clickedNode.isWalkable && !clickedNode.isBuildableAndHasATurret && !clickedNode.isBuildableAndHasABarricade) {
 
 				// le decimos que intente abrirlo
 				turretMenu.SendMessage ("OpenTurretSelectionMenu", clickedNode);
