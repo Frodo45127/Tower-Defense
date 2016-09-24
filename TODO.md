@@ -43,7 +43,6 @@
 
 #### - Código
 - [ ] Optimizar el algoritmo de pathfinding.
-- [ ] Hacer que la cantidad de barricadas que se tienen sólo se actualice cuando pones o quitas una barricada.
 - [ ] Implementar interfaces para evitar joder los "Spawner" de los distintos niveles.
 - [x] Hacer que al poner el ratón sobre una torreta se muestre un círculo verde (o de otro color) que muestre el alcance de la torreta.
 - [x] Mejorar el sistema de pintado automático del mapa para que genere distintas listas de Tiles dependiendo del terreno, y que añada la posición en el grid de la Tile al nombre del Tile, para poder localizarla mejor una vez creada.

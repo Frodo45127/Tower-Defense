@@ -43,7 +43,6 @@ public class InGameMenu : MonoBehaviour {
 		// si todavia no hemos empezado
 		if (!GameManager.Instance.isPlayerReady) {
 
-			// FIXME: ineficiente. Hay que optimizarlo.
 			// manten actualizado el contador de barricadas
 			barricadeCounter.text = "Te quedan " + GameManager.Instance.Barricades + " barricadas.";
 		}
