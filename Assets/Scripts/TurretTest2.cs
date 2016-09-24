@@ -34,7 +34,12 @@ public class TurretTest2 : Turret {
 				GameObject shotedBullet = (GameObject)Instantiate (bullet, new Vector2 (turretTop.position.x, turretTop.position.y + 0.6f), turretTop.rotation);
 
 				// y le decimos a la bala el daño que debe tener
-				shotedBullet.GetComponent<Bullet> ().damage = damage;
+				shotedBullet.GetComponent<CannonBall> ().damage = damage;
+
+				// y le decimos a la bala la posición a la que debe dirigirse
+				shotedBullet.GetComponent<CannonBall> ().targetTransform = targetEnemy.transform;
+
+				// y reseteamos el temporizador
 				timerShot = timerShotReset;
 			}
 		}

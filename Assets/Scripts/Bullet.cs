@@ -12,36 +12,39 @@ public class Bullet : MonoBehaviour {
 
 	// cacheo
 	private Transform myTransform;
-	private Vector3 initialPosition;
+	public Transform targetTransform;
 
 	// velocidad
-	public float speed;
+	private float speed;
 
 	// daño de la bala
 	public int damage;
 
-	// alcance máximo del disparo (alcance de la torreta)
-	public int bulletRange;
-
 	// Use this for initialization
 	void Start () {
 		myTransform = transform;
-		initialPosition = myTransform.position;
-		speed = 5f;
+		speed = 100f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		// mueve la bala
-		myTransform.Translate (Vector3.up * speed);
+		// si el objetivo sigue vivo
+		if (targetTransform) {
+			
+			// seteamos la distancia a moverse en cada update
+			float distanceToMove = speed * Time.deltaTime;
 
-		// si la bala se sale del rango
-		if (Vector3.Distance(initialPosition, myTransform.position) > bulletRange) {
+			// mueve la bala hacia el enemigo
+			myTransform.position = Vector2.MoveTowards(myTransform.position, targetTransform.position, distanceToMove);	
+		}
+		// si el objetivo ha muerto
+		else {
 
-			// destruyela
+			// destruye la bala
 			Destroy (this.gameObject);
 		}
+
 	}
 
 	// que hacer cuando impacta contra un enemigo o un boss

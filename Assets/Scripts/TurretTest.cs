@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-// necesario para el fix de clickar a traves de los botones
-using UnityEngine.EventSystems;
 
 //-----------------------------------------------------------------------
 // TurretTest.cs
@@ -13,7 +11,7 @@ using UnityEngine.EventSystems;
 //
 //-----------------------------------------------------------------------
 
-public class TurretTest : Turret, IPointerClickHandler {
+public class TurretTest : Turret {
 
 	// la bala a disparar
 	public GameObject bullet;
@@ -37,8 +35,8 @@ public class TurretTest : Turret, IPointerClickHandler {
 				// le decimos a la bala el daño que debe tener
 				shotedBullet.GetComponent<Bullet> ().damage = damage;
 
-				// y el rango máximo que debe tener, para desaparecer si falla
-				shotedBullet.GetComponent<Bullet> ().bulletRange = range;
+				// y el enemigo al que debe perseguir
+				shotedBullet.GetComponent<Bullet> ().targetTransform = targetEnemy.transform;
 
 				// y reseteamos el temporizador
 				timerShot = timerShotReset;

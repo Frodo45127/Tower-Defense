@@ -160,12 +160,12 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 	// funcion para encontrar al enemigo mas cercano
 	GameObject FindNearestEnemy(){
 		
-		// creamos las variable para almacenar las distancias y los enemigos
+		// creamos las variables para almacenar las distancias y los enemigos
 		float enemyDist;
 		GameObject nearestEnemy = null;
 		float nearestEnemyDist = 0f;
 
-		// comporbamos la distancia a cada enemigo de la lista de enemigos spawneados
+		// comprobamos la distancia a la que está cada enemigo de la lista de enemigos spawneados
 		foreach (GameObject e in enemyList) {
 
 			// si el enemigo existe
