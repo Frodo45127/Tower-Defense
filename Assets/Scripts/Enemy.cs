@@ -2,6 +2,8 @@
 using System.Collections;
 // necesario para manipular la lista del camino a seguir
 using System.Collections.Generic;
+// necesario para usar las barras de vida
+using UnityEngine.UI;
 
 //-----------------------------------------------------------------------
 // Enemy.cs
@@ -16,6 +18,8 @@ public class Enemy : MonoBehaviour {
 	// cacheo
 	protected Transform myTransform;
 	protected Spawner spawner;
+	protected Canvas enemyUI;
+	public Slider healthBar;
 
 	// lista de nodos que forman el camino a seguir y nodo actual
 	protected List<Node> pathToFollow;
@@ -45,6 +49,7 @@ public class Enemy : MonoBehaviour {
 	// cacheamos
 	void Awake() {
 		spawner = GameObject.Find ("Spawner").GetComponent<Spawner> ();
+		enemyUI = gameObject.GetComponentInChildren<Canvas> ();
 	}
 	// aqui movemos al enemigo por el camino
 	void FixedUpdate() {
@@ -102,7 +107,17 @@ public class Enemy : MonoBehaviour {
 
 	// recibe daño
 	void ReceiveDamage(int damage) {
+
+		// si el canvas de la barra de vida es invisible
+		if (!enemyUI.enabled) {
+			
+			// le hacemos visible
+			enemyUI.enabled = true;
+		}
+		// le baja la vida y la barra de vida
 		healthPoints -= damage;
+		healthBar.value = healthPoints;
+
 		// si no nos queda vida
 		if (healthPoints <= 0) {
 

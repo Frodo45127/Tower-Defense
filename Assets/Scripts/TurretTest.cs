@@ -34,8 +34,13 @@ public class TurretTest : Turret, IPointerClickHandler {
 				// y dispara la bala con la rotacion que tenga la torreta desde el cañon
 				GameObject shotedBullet = (GameObject)Instantiate (bullet, new Vector2 (turretTop.position.x, turretTop.position.y + 0.6f), turretTop.rotation);
 
-				// y le decimos a la bala el daño que debe tener
+				// le decimos a la bala el daño que debe tener
 				shotedBullet.GetComponent<Bullet> ().damage = damage;
+
+				// y el rango máximo que debe tener, para desaparecer si falla
+				shotedBullet.GetComponent<Bullet> ().bulletRange = range;
+
+				// y reseteamos el temporizador
 				timerShot = timerShotReset;
 			}
 		}

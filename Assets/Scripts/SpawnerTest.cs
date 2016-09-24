@@ -23,8 +23,8 @@ public class SpawnerTest : Spawner {
 		timerWaveReset = 2f;
 
 		// tiempo entre spawns en una misma oleada
-		timerSpawn = 0.4f;
-		timerSpawnReset = 0.4f;
+		timerSpawn = 0.8f;
+		timerSpawnReset = 0.8f;
 
 		// contador de oleadas
 		waveCounter = 0;

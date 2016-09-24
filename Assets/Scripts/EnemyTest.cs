@@ -25,6 +25,13 @@ public class EnemyTest : Enemy {
 		money = 20;
 		damage = 1;
 
+		// seteamos el máximo de vida y la vida inicial
+		healthBar.maxValue = healthPoints;
+		healthBar.value = healthPoints;
+
+		// hacemos invisible el canvas de la barra de vida mientras la vida esté a tope
+		enemyUI.enabled = false;
+
 		// cogemos la lista de nodos (camino) que haya en el spawner
 		pathToFollow = spawner.Path;
 
