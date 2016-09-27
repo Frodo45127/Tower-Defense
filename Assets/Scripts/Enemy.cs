@@ -45,6 +45,9 @@ public class Enemy : MonoBehaviour {
 	// vida del enemigo
 	[SerializeField]
 	protected int healthPoints;
+
+	// variable para saber si es volador o terrestre
+	public bool isFlying;
 		
 	// cacheamos
 	void Awake() {

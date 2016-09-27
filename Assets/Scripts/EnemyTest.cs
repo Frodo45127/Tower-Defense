@@ -24,6 +24,7 @@ public class EnemyTest : Enemy {
 		score = 50;
 		money = 20;
 		damage = 1;
+		isFlying = false;
 
 		// seteamos el máximo de vida y la vida inicial
 		healthBar.maxValue = healthPoints;
