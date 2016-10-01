@@ -14,7 +14,7 @@ using System.Collections.Generic;
 public class TurretMenu : MonoBehaviour {
 
 	// añadimos las torretas a instanciar
-	public GameObject turret1, turret2;
+	public GameObject turret1, turret2, turret3;
 
 	// y el array con las barricadas a usar
 	// ATENCION: el orden de las barricadas es el siguiente:
@@ -105,6 +105,10 @@ public class TurretMenu : MonoBehaviour {
 		else if (turret == 1) {
 			turretToBuild = turret2;
 			costNewTurret = turret2.GetComponent<TurretTest2>().Cost;
+		}
+		else if (turret == 2) {
+			turretToBuild = turret3;
+			costNewTurret = turret3.GetComponent<AATurretTest>().Cost;
 		}
 		else {
 			Debug.Log ("La torreta no existe.");

@@ -88,19 +88,23 @@ public class CannonBall : MonoBehaviour {
 	void HitAllEnemiesInRange(){
 
 		// comprobamos la distancia a la que está cada enemigo de la lista de enemigos spawneados
-		foreach (GameObject e in enemyList) {
+		foreach (GameObject e in enemyList.ToArray()) {
 
 			// si el enemigo existe
 			if (e != null) {
 
-				// sacamos la distancia entre el impacto y el enemigo
-				float distance = Vector3.Distance (myTransform.position, e.transform.position);
+				// y no es volador
+				if (!e.GetComponent<Enemy>().isFlying) {
 
-				// si esta dentro del área de impacto
-				if (distance <= damageArea) {
+					// sacamos la distancia entre el impacto y el enemigo
+					float distance = Vector3.Distance (myTransform.position, e.transform.position);
 
-					// le quitamos vida
-					e.SendMessage ("ReceiveDamage", damage);
+					// si esta dentro del área de impacto
+					if (distance <= damageArea) {
+
+						// le quitamos vida
+						e.SendMessage ("ReceiveDamage", damage);
+					}	
 				}
 			}
 		}

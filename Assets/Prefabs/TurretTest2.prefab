@@ -21,6 +21,7 @@ GameObject:
   - 4: {fileID: 4000012620749690}
   - 61: {fileID: 61000013267099840}
   - 120: {fileID: 120000014177150234}
+  - 114: {fileID: 114000012179502818}
   m_Layer: 0
   m_Name: TurretTest2
   m_TagString: Untagged
@@ -215,6 +216,23 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114000012179502818
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010957196122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6711a49d1cbcb4c1d920bab8b9adcc30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turretMenu: {fileID: 1000014123543516, guid: 642bb8f5c2c4545aa9074ba100197b91, type: 2}
+  enemyList: []
+  damage: 4
+  range: 50
+  cost: 200
+  bullet: {fileID: 1000012092533200, guid: 26dc3f2d5ce984907b32c08cee896cc8, type: 2}
 --- !u!120 &120000014177150234
 LineRenderer:
   m_ObjectHideFlags: 1

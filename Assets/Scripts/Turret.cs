@@ -33,6 +33,10 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 	// la torreta en la que pinchamos
 	private GameObject clickedTurret;
 
+	// variable para saber si la torreta es antiaérea
+	protected bool isAATurret;
+	protected bool isHibridTurret;
+
 	// booleana para saber si tenemos el ratón sobre la torreta
 	private bool isOver9000;
 
@@ -44,6 +48,9 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 	protected int damage;
 	[SerializeField]
 	protected int range;
+	[SerializeField]
+	protected float timerShotReset;
+	protected float timerShot;
 	[SerializeField]
 	protected int cost;
 	public int Cost {
@@ -73,8 +80,26 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 		// si no tenemos enemigo
 		if (targetEnemy == null) {
 
-			// buscamos uno
-			targetEnemy = FindNearestEnemy ();
+			// y nuestra torreta es sólo AA
+			if (isAATurret) {
+				
+				// buscamos un enemigo aéreo
+				targetEnemy = FindNearestEnemy (true, false);	
+			}
+
+			// y nuestra torreta es hibrida
+			else if (isHibridTurret) {
+				
+				// buscamos a cualquier enemigo
+				targetEnemy = FindNearestEnemy (false, false);
+			}
+
+			// y nuestra torreta solo ataca a tierra
+			else {
+
+				// buscamos un enemigo terrestre
+				targetEnemy = FindNearestEnemy (false, true);
+			}
 		}
 
 		// y si tenemos un enemigo
@@ -158,7 +183,7 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 	#endregion
 
 	// funcion para encontrar al enemigo mas cercano
-	GameObject FindNearestEnemy(){
+	GameObject FindNearestEnemy(bool searchFlyingEnemiesOnly, bool searchLandEnemiesOnly){
 		
 		// creamos las variables para almacenar las distancias y los enemigos
 		float enemyDist;
@@ -166,7 +191,29 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 		float nearestEnemyDist = 0f;
 
 		// comprobamos la distancia a la que está cada enemigo de la lista de enemigos spawneados
-		foreach (GameObject e in enemyList) {
+		foreach (GameObject e in enemyList.ToArray()) {
+
+			// si solo queremos buscar a los voladores
+			if (searchFlyingEnemiesOnly == true) {
+
+				// comprueba si es volador
+				if (!e.GetComponent<Enemy>().isFlying) {
+
+					// si no es volador, saltatelo
+					continue;
+				}
+			}
+
+			// si solo queremos buscar a los terrestres
+			else if (searchLandEnemiesOnly == true) {
+
+				// comprueba si es volador
+				if (e.GetComponent<Enemy>().isFlying) {
+
+					// si es volador, saltatelo
+					continue;
+				}
+			}
 
 			// si el enemigo existe
 			if (e != null) {

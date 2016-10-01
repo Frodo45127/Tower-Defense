@@ -256,6 +256,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f45288cb44eabc14d93651e6b95351ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turretMenu: {fileID: 1000014123543516, guid: 642bb8f5c2c4545aa9074ba100197b91, type: 2}
+  enemyList: []
+  damage: 1
+  range: 400
+  timerShotReset: 1
+  cost: 150
+  bullet: {fileID: 1000013228293536, guid: a937757aa0a5a4339a2a4e130abd657d, type: 2}
 --- !u!120 &120000011060538050
 LineRenderer:
   m_ObjectHideFlags: 1

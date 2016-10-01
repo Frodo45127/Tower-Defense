@@ -16,9 +16,13 @@ public class TurretTest : Turret {
 	// la bala a disparar
 	public GameObject bullet;
 
-	// tiempo entre disparos
-	private float timerShot = 1f;
-	private float timerShotReset = 1f;
+	// inicializamos los tiempos entre disparos y demás
+	void Start() {
+		isAATurret = false;
+		isHibridTurret = true;
+		timerShot = 1f;
+		timerShotReset = 1f;
+	}
 
 	void FixedUpdate() {
 
