@@ -19,7 +19,7 @@ public class Spawner : MonoBehaviour {
 	public GameObject ground;
 	protected Pathfinder pathfinder;
 	protected Grid grid;
-	protected InGameMenu menus;
+	protected InGameMenu InGameUI;
 
 	// TODO: hacer que esto funcione con multiples caminos
 	// define el camino a seguir
@@ -81,7 +81,7 @@ public class Spawner : MonoBehaviour {
 		spawnPosition = startPosition.transform.position;
 		pathfinder = ground.GetComponent<Pathfinder> ();
 		grid = ground.GetComponent<Grid> ();
-		menus = GameObject.Find ("Menus").GetComponent<InGameMenu> ();
+		InGameUI = GameObject.Find ("InGameUI").GetComponent<InGameMenu> ();
 	}
 
 	// Update is called once per frame
@@ -155,7 +155,7 @@ public class Spawner : MonoBehaviour {
 			if (bossSpawned && SpawnedEnemyList.Count == 0) {
 
 				// es que hemos matado a to cristo y hemos ganao
-				menus.LevelCompleted ();
+				InGameUI.LevelCompleted ();
 			}
 		}
 	}

@@ -53,7 +53,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010467348362}
   - 33: {fileID: 33000013981504942}
-  - 65: {fileID: 65000010440062426}
   - 23: {fileID: 23000010888233056}
   m_Layer: 0
   m_Name: Cannon
@@ -221,18 +220,6 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
---- !u!65 &65000010440062426
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013077631078}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65000014256139090
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -256,7 +243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f45288cb44eabc14d93651e6b95351ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turretMenu: {fileID: 1000014123543516, guid: 642bb8f5c2c4545aa9074ba100197b91, type: 2}
   enemyList: []
   damage: 1
   range: 400

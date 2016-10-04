@@ -13,9 +13,9 @@ using System.Collections;
 //
 //-----------------------------------------------------------------------
 
-//FIXME: arreglar esto cuando montemos el nivel de pruebas
 public class InGameMenu : MonoBehaviour {
 
+	//TODO: hacer que esto lo encuentre automaticamente
 	// paneles hijos del canvas de los menus
 	public GameObject pauseMenu, levelCompletedMenu, gameOverMenu;
 
@@ -50,6 +50,36 @@ public class InGameMenu : MonoBehaviour {
 		// si pulsamos escape, pausa el juego
 		if (Input.GetKeyDown(KeyCode.Escape)){
 			PauseGame ();
+		}
+	}
+
+	// función para seleccionar una torreta
+	public void SelectTurret(int selectedTurret) {
+
+		// dependiendo del botón al que le demos, cojemos una torreta u otra
+		switch (selectedTurret) {
+
+		// caso -1, destruye la torreta en la que hagas click
+		case -1:
+			GameManager.Instance.SelectedTurret = -1;
+			break;
+		// caso 0, limpieza de la torreta seleccionada
+		case 0:
+			GameManager.Instance.SelectedTurret = 0;
+			break;
+		case 1:
+			GameManager.Instance.SelectedTurret = 1;
+			break;
+		case 2:
+			GameManager.Instance.SelectedTurret = 2;
+			break;
+		case 3:
+			GameManager.Instance.SelectedTurret = 3;
+			break;
+		default:
+			GameManager.Instance.SelectedTurret = 0;
+			Debug.Log ("Error, torreta seleccionada no valida");
+			break;
 		}
 	}
 

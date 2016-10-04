@@ -16,9 +16,6 @@ using UnityEngine.EventSystems;
 
 public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
 
-	// menu de mantenimiento de las torretas
-	public GameObject turretMenu;
-
 	// cacheo del transform
 	protected Transform myTransform;
 	protected Transform turretTop;
@@ -150,8 +147,17 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 		// pillamos la torreta en la que hemos pinchado
 		clickedTurret = this.gameObject;
 
-		// y activamos el menu de mantenimiento y se la pasamos
-		turretMenu.SendMessage ("OpenTurretManagementMenu", clickedTurret);
+		// si estamos destruyendo torretas
+		if (GameManager.Instance.SelectedTurret == -1) {
+			
+			// se la mandamos a la función de destrucción de torretas
+			GameObject.Find("Ground").GetComponent<TurretBuilder>().SendMessage ("DestroyTurret", clickedTurret);
+		}
+
+		// si no estamos destruyendo torretas
+		else {
+			Debug.Log ("Hacemos algo, no se el qué.");
+		}
 	}
 
 	#endregion

@@ -43,8 +43,17 @@ public class GameManager : MonoBehaviour {
 
 	// NOTA: El objeto GameManager se crea siempre que algo llame a algo de este script
 	// aquí empezamos a definir las variables y sus propiedades
+
+	//---------------------------
+	// Variables para los menus
+	//---------------------------
+
 	// variable necesaria para el arranque
 	public bool IsFirstStart { get; set;}
+
+	//---------------------------
+	// Variables para la partida
+	//---------------------------
 
 	// variables necesarias para la partida
 	[SerializeField]
@@ -90,9 +99,27 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	// nombre del jugador
 	public string PlayerName { get; set;}
 
+	// variable para saber si estamos en fase de preparación o de juego
 	public bool isPlayerReady;
+
+	// propiedad para saber que torreta tenemos clickeada y si ha cambiado
+	[SerializeField]
+	public bool hasSelectedTurretChanged;
+	private int selectedTurret;
+	public int SelectedTurret {
+		get { 
+			return selectedTurret;
+		}
+		set {
+			if (selectedTurret != value) {
+				selectedTurret = value;
+				hasSelectedTurretChanged = true;
+			}
+		}
+	}
 
 	// inicializamos la variable para el logo con el constructor
 	public GameManager(){
@@ -110,7 +137,7 @@ public class GameManager : MonoBehaviour {
 			Debug.Log ("Hemos perdio.");
 
 			// ejecuta un gameover de manual
-			GameObject.Find ("Menus").GetComponent<InGameMenu> ().GameOver ();
+			GameObject.Find ("InGameUI").GetComponent<InGameMenu> ().GameOver ();
 		}
 	}
 
