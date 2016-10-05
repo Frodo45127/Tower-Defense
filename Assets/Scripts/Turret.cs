@@ -18,7 +18,6 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 
 	// cacheo del transform
 	protected Transform myTransform;
-	protected Transform turretTop;
 
 	// cacheo de la lista de enemigos spawneados y del spawner
 	public List<GameObject> enemyList;
@@ -33,6 +32,18 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 	// variable para saber si la torreta es antiaérea
 	protected bool isAATurret;
 	protected bool isHibridTurret;
+
+	// variable para saber si es un fantasma o no
+	[SerializeField]
+	protected bool isPhantom;
+	public bool IsPhantom {
+		get {
+			return isPhantom;
+		}
+		set {
+			isPhantom = value;
+		}
+	}
 
 	// booleana para saber si tenemos el ratón sobre la torreta
 	private bool isOver9000;
@@ -65,7 +76,6 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 	// cacheamos
 	void Awake(){
 		myTransform = transform;
-		turretTop = myTransform.Find("TurretTop");
 		spawner = GameObject.Find("Spawner");
 		enemyList = spawner.GetComponent<Spawner> ().SpawnedEnemyList;
 		rangeBorder = gameObject.GetComponent<LineRenderer>();
@@ -74,46 +84,52 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 	// y empezamos la fiesta
 	void Update(){
 
-		// si no tenemos enemigo
-		if (targetEnemy == null) {
+		// si no somos un fantasma
+		if (!isPhantom) {
+			
+			// si no tenemos enemigo
+			if (targetEnemy == null) {
 
-			// y nuestra torreta es sólo AA
-			if (isAATurret) {
+				// y nuestra torreta es sólo AA
+				if (isAATurret) {
 				
-				// buscamos un enemigo aéreo
-				targetEnemy = FindNearestEnemy (true, false);	
+					// buscamos un enemigo aéreo
+					targetEnemy = FindNearestEnemy (true, false);	
+				}
+
+				// y nuestra torreta es hibrida
+				else if (isHibridTurret) {
+				
+					// buscamos a cualquier enemigo
+					targetEnemy = FindNearestEnemy (false, false);
+				}
+
+				// y nuestra torreta solo ataca a tierra
+				else {
+
+					// buscamos un enemigo terrestre
+					targetEnemy = FindNearestEnemy (false, true);
+				}
 			}
 
-			// y nuestra torreta es hibrida
-			else if (isHibridTurret) {
-				
-				// buscamos a cualquier enemigo
-				targetEnemy = FindNearestEnemy (false, false);
-			}
-
-			// y nuestra torreta solo ataca a tierra
+			// y si tenemos un enemigo
 			else {
 
-				// buscamos un enemigo terrestre
-				targetEnemy = FindNearestEnemy (false, true);
+				// calculamos la distancia a la que esta
+				float enemyDist = Vector3.Distance (myTransform.position, targetEnemy.transform.position);
+
+				// si ya no esta en rango, olvidalo
+				if (enemyDist >= range) {
+					targetEnemy = null;
+				}
 			}
 		}
 
-		// y si tenemos un enemigo
+		// si es un fantasma
 		else {
 
-			// calculamos la distancia a la que esta
-			float enemyDist = Vector3.Distance(myTransform.position, targetEnemy.transform.position);
-
-			// y si esta en rango, enfocamos la torreta
-			if (enemyDist <= range) {
-				turretTop.up = targetEnemy.transform.position - myTransform.position;
-			}
-
-			// si ya no esta en rango, olvidalo
-			else {
-				targetEnemy = null;
-			}
+			// muestra todo el rato el rango
+			isOver9000 = true;
 		}
 
 		// si colocamos el ratón sobre la torreta

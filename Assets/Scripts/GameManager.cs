@@ -144,6 +144,8 @@ public class GameManager : MonoBehaviour {
 	// funcion para resetear las variables de la partida (dinero, puntos,...)
 	public void SetLevelVariables(int _money, int _score, int _baseHealthPoints, int _barricades) {
 		// Reinicializamos todas las variables del jugador para la siguiente partida
+		isPlayerReady = false;
+		SelectedTurret = 0;
 		Money = _money;
 		Score = _score;
 		PlayerName = "";
@@ -162,6 +164,7 @@ public class GameManager : MonoBehaviour {
 		else {
 			AddToHighScoreListSorted (PlayerName, Score);
 		}
+		// TODO: setea todo lo relacionado con los niveles a cero o null para que no moleste en el menú
 		// Volvemos al menú, después de dejar todo listo para otra partida.
 		SceneManager.LoadScene (0);
 	}

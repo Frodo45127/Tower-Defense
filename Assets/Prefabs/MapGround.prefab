@@ -104,9 +104,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14f4ac46939d947bcabd3a9f509a5055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turretSelectionMenu: {fileID: 0}
-  turretManagementMenu: {fileID: 0}
-  turretMenu: {fileID: 0}
+  turret1: {fileID: 1000012013361002, guid: 27fbe94c87c40485fbea60143b69aa41, type: 2}
+  turret2: {fileID: 1000010957196122, guid: 32c1161d6ee9a43a380797eaf7002c3e, type: 2}
+  turret3: {fileID: 1000012013361002, guid: 246d8e1d2c44e4f48b864e17793febe9, type: 2}
+  barricadeList:
+  - {fileID: 1000013147515996, guid: 69b5c7e41aada4ac68e0ae543778af5d, type: 2}
+  - {fileID: 1000013147515996, guid: 69b5c7e41aada4ac68e0ae543778af5d, type: 2}
+  - {fileID: 1000013147515996, guid: 69b5c7e41aada4ac68e0ae543778af5d, type: 2}
+  - {fileID: 1000013147515996, guid: 69b5c7e41aada4ac68e0ae543778af5d, type: 2}
 --- !u!114 &114000013574868364
 MonoBehaviour:
   m_ObjectHideFlags: 1

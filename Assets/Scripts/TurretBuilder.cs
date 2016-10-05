@@ -41,7 +41,9 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 
 	// variables para el fantasma de la torreta seleccionada
 	private GameObject selectedTurretPhantom;
-	private GameObject selectedTurretPhantomInActualNode;
+	private GameObject selectedTurretPhantomInCurrentNode;
+	private GameObject selectedBarricadePhantom;
+	private GameObject selectedBarricadePhantomInCurrentNode;
 
 
 	// en el awake cacheamos lo necesario
@@ -52,8 +54,103 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 		
 	void Update() {
 
+		// si la partida no ha empezado
+		if (!GameManager.Instance.isPlayerReady) {
+
+			// si tenemos un nodo válido
+			if (hoveredNode != null) {
+			
+				// si tenemos barricadas
+				if (GameManager.Instance.Barricades > 0) {
+
+					// comprobamos si el nodo en el que estamos es válido
+					bool CanIPutABarricadeHere = CheckBarricadeRequeriments (hoveredNode);
+
+					// si el nodo el que estamos es válido
+					if (CanIPutABarricadeHere) {
+
+						// si ya tenemos la barricada elegida
+						if (selectedBarricadePhantom != null) {
+
+							// si no tenemos una barricada fantasma creada
+							if (selectedBarricadePhantomInCurrentNode == null) {
+
+								// es el primer nodo sobre el que nos ponemos, luego ponemos la barricada
+								selectedBarricadePhantomInCurrentNode = (GameObject)Instantiate (selectedBarricadePhantom, hoveredNode.worldPosition, Quaternion.identity);
+
+								// la seteamos como fantasma y la quitamos el BoxCollider
+								selectedBarricadePhantomInCurrentNode.GetComponent<Barricade> ().IsPhantom = true;
+								Destroy (selectedBarricadePhantomInCurrentNode.GetComponent<BoxCollider> ());
+
+								// ANALOGIA DE PLSQL
+								// CREA UN CURSOR CON LOS DATOS DE COLOR DEL FANTASMA (r,g,b,a)
+								Color newalpha = selectedBarricadePhantomInCurrentNode.GetComponent<SpriteRenderer>().material.color;
+								// A LA (a) LE APLICA EL NUEVO VALOR
+								newalpha.a = 0.5f;
+								// ESCRIBE EN EL COLOR DEL FANTASMA LOS DATOS ALMACENADOS EN EL CURSOR
+								selectedBarricadePhantomInCurrentNode.GetComponent<SpriteRenderer>().material.color = newalpha;
+								// FIN DE LA ANALOGÍA
+							}
+
+							// si ya tenemos una barricada fantasma creada
+							else {
+
+								// sacamos el nuevo nodo del ratón
+								Node newHoveredNode = GetNodeFromMousePosition ();
+
+								// si el nodo nuevo es distinto al viejo y no es nulo (hemos movido el ratón)
+								if (newHoveredNode != null && newHoveredNode != hoveredNode) {
+
+									// cambia el nodo
+									hoveredNode = newHoveredNode;
+
+									// borra la barricada seleccionada (pues hay que buscar una nueva para el nuevo nodo)
+									selectedBarricadePhantom = null;
+
+									// y destruye el fantasma
+									Destroy (selectedBarricadePhantomInCurrentNode);
+								}
+							}
+						}
+
+						// si no tenemos barricada elegida
+						else {
+							
+							// sacamos una barricada
+							selectedBarricadePhantom = SelectOrientedBarricade (hoveredNode);
+						}
+					}
+
+					// si el nodo en el que estamos no es válido para poner barricadas
+					else {
+
+						// lo seteamos a null
+						hoveredNode = null;
+					}
+				}
+
+				// si no nos quedan barricadas
+				else {
+
+					// si no hemos destruído la barricada fantasma
+					if (selectedBarricadePhantomInCurrentNode != null) {
+
+						// la destruímos
+						Destroy (selectedBarricadePhantomInCurrentNode);
+					}
+				}
+			}
+
+			// si no tenemos nodo válido
+			else {
+
+				// sacamos el nodo en el que estamos
+				hoveredNode = GetNodeFromMousePosition ();
+			}
+		}
+
 		// si la partida ha empezado
-		if (GameManager.Instance.isPlayerReady) {
+		else {
 
 			// TODO: cambiar esto por un bloqueo de los botones hasta que le damos a empezar
 			// si por alguna razón la torreta fantasma no es nula al empezar
@@ -69,74 +166,106 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 			// si tenemos torreta seleccionada
 			if (GameManager.Instance.SelectedTurret > 0) {
 
-				// si no tenemos nodo todavia
-				if (hoveredNode == null) {
+				// si tenemos un nodo válido
+				if (hoveredNode != null) {
 
-					// sacamos el nodo en el que estamos
-					hoveredNode = GetNodeFromMousePosition ();
-				}
-				
-				// si no tenemos torreta fantasma (por lo que sea) o acabamos de cambiar de torreta
-				if (selectedTurretPhantom == null || GameManager.Instance.hasSelectedTurretChanged) {
+					// si no tenemos torreta fantasma (por lo que sea) o acabamos de cambiar de torreta
+					if (selectedTurretPhantom == null || GameManager.Instance.hasSelectedTurretChanged) {
 
-					// pilla la torreta nueva
-					selectedTurretPhantom = GetSelectedTurret ();
+						// pilla la torreta nueva
+						selectedTurretPhantom = GetSelectedTurret ();
 
-					// si hemos pillado una nueva torreta porque ha cambiado la seleccionada
-					if (GameManager.Instance.hasSelectedTurretChanged) {
-					
-						// destruye la torreta actual
-						Destroy (selectedTurretPhantomInActualNode);
+						// si hemos pillado una nueva torreta porque ha cambiado la seleccionada
+						if (GameManager.Instance.hasSelectedTurretChanged) {
 
-						// y dile al GameManager que ya la hemos cambiado
-						GameManager.Instance.hasSelectedTurretChanged = false;
-					}
-				}
+							// destruye la torreta actual
+							Destroy (selectedTurretPhantomInCurrentNode);
 
-				// si ya tenemos torreta
-				if (selectedTurretPhantom != null) {
-
-					// si no tenemos ningún fantasma creado en ningún nodo
-					if (selectedTurretPhantomInActualNode == null) {
-
-						// es el primer nodo sobre el que nos ponemos, luego ponemos la torreta
-						selectedTurretPhantomInActualNode = (GameObject)Instantiate (selectedTurretPhantom, hoveredNode.worldPosition, Quaternion.identity);
-
-						// le quitamos el script y el box collider de la torreta, y el box collider
-						// de sus hijos, para que no haga cosas raras y se comporte como un fantasma
-						Destroy (selectedTurretPhantomInActualNode.GetComponent<Turret> ());
-						Destroy (selectedTurretPhantomInActualNode.GetComponent<BoxCollider2D> ());
-						Destroy (selectedTurretPhantomInActualNode.GetComponentInChildren<BoxCollider> ());
-
-						// TODO: hacer que el fantasma sea transparente.
-
-						// TODO: hacer que el fantasma muestre el alcance.
-					}
-
-				// si tenemos una torreta fantasma
-				else {
-
-						// sacamos el nuevo nodo del ratón
-						Node newHoveredNode = GetNodeFromMousePosition ();
-
-						// si el nodo nuevo es distinto al viejo y no es nulo
-						if (newHoveredNode != null && newHoveredNode != hoveredNode) {
-
-							// actualiza el nodo
-							hoveredNode = newHoveredNode;
-
-							// mueve el fantasma a la nueva posición
-							selectedTurretPhantomInActualNode.transform.position = hoveredNode.worldPosition;
+							// y dile al GameManager que ya la hemos cambiado
+							GameManager.Instance.hasSelectedTurretChanged = false;
 						}
 					}
+
+					// si ya tenemos torreta
+					if (selectedTurretPhantom != null) {
+
+						// si no tenemos ningún fantasma creado en ningún nodo
+						if (selectedTurretPhantomInCurrentNode == null) {
+
+							// comprueba si sobre la posición actual se puede poner una torreta
+							bool CanIPutATurretHere = CheckTurretRequeriments (hoveredNode);
+
+							// si puedo poner una torreta
+							if (CanIPutATurretHere) {
+
+								// es el primer nodo sobre el que nos ponemos, luego ponemos la torreta
+								selectedTurretPhantomInCurrentNode = (GameObject)Instantiate (selectedTurretPhantom, hoveredNode.worldPosition, Quaternion.identity);
+
+								// le quitamos el boxCollider y la seteamos como fantasma, para que no haga cosas raras
+								selectedTurretPhantomInCurrentNode.GetComponent<Turret> ().IsPhantom = true;
+								Destroy (selectedTurretPhantomInCurrentNode.GetComponent<BoxCollider> ());
+
+								// ANALOGIA DE PLSQL
+								// CREA UN CURSOR CON LOS DATOS DE COLOR DEL FANTASMA (r,g,b,a)
+								Color newalpha = selectedTurretPhantomInCurrentNode.GetComponent<SpriteRenderer>().material.color;
+								// A LA (a) LE APLICA EL NUEVO VALOR
+								newalpha.a = 0.5f;
+								// ESCRIBE EN EL COLOR DEL FANTASMA LOS DATOS ALMACENADOS EN EL CURSOR
+								selectedTurretPhantomInCurrentNode.GetComponent<SpriteRenderer>().material.color = newalpha;
+								// FIN DE LA ANALOGÍA
+							}
+
+							// si no podemos poner la torreta
+							else {
+
+								// seteamos el nodo como nulo
+								hoveredNode = null;
+							}
+						}
+
+						// si tenemos una torreta fantasma
+						else {
+
+							// sacamos el nuevo nodo del ratón
+							Node newHoveredNode = GetNodeFromMousePosition ();
+
+							// si el nodo nuevo es distinto al viejo y no es nulo
+							if (newHoveredNode != null && newHoveredNode != hoveredNode) {
+
+								// comprueba si sobre la nueva posición se puede poner una torreta
+								bool CanIMoveThePhantomTurretHere = CheckTurretRequeriments (newHoveredNode);
+
+								// si se pueden poner torretas en el nodo
+								if (CanIMoveThePhantomTurretHere) {
+
+									// actualiza el nodo
+									hoveredNode = newHoveredNode;
+
+									// mueve el fantasma a la nueva posición
+									selectedTurretPhantomInCurrentNode.transform.position = hoveredNode.worldPosition;
+								}
+							}
+						}
+					}
+				}
+
+				// si no tenemos nodo válido
+				else {
+					
+					// sacamos el nodo en el que estamos
+					hoveredNode = GetNodeFromMousePosition ();
 				}
 			}
 
 			// si no tenemos torreta seleccionada
 			else {
 
-				// si tenemos un fantasma, nos lo ventilamos
-				Destroy (selectedTurretPhantomInActualNode);
+				// y por la razón que sea el fantasma sigue existiendo
+				if (selectedTurretPhantomInCurrentNode != null) {
+					
+					// si tenemos un fantasma, nos lo ventilamos
+					Destroy (selectedTurretPhantomInCurrentNode);	
+				}
 			}
 		}
 	}
@@ -150,128 +279,51 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 		// sacamos el nodo sobre el que hemos clickado
 		clickedNode = GetNodeFromMousePosition ();
 
-		// si el nodo existe y la partida ha empezado
-		if (clickedNode != null && GameManager.Instance.isPlayerReady) {
+		// comprobamos el estado del juego
+		switch (GameManager.Instance.isPlayerReady){
 
-			// y es construible, no es camino y no tiene torretas ni barricadas y 
-			// tenemos una torreta seleccionada
-			if (clickedNode.isBuildable &&
-				!clickedNode.isWalkable &&
-				!clickedNode.isBuildableAndHasATurret &&
-				!clickedNode.isBuildableAndHasABarricade &&
-				GameManager.Instance.SelectedTurret != 0) {
+		// si el juego ha empezado
+		case true:
 
-				// si no esta activada la opción de destruir torretas
-				if (GameManager.Instance.SelectedTurret != -1) {
+			// comprueba si puedo poner la torreta en el nodo
+			bool CanIPutThisTurretHere = CheckTurretRequeriments (clickedNode);
 
-					// intentamos construir la torreta
-					BuildTurret ();	
-				}
+			// si puedo ponerla
+			if (CanIPutThisTurretHere) {
 
-				// si está activada la opción de destruir torretas
-				else {
-					Debug.Log ("Modo destroyer, no hay nada que destruir.");
-				}
+				// la construímos
+				BuildTurret (clickedNode);
 			}
 
-			// y es construible, pero ya tiene una torreta
-			else if (clickedNode.isBuildable && clickedNode.isBuildableAndHasATurret) {
-				Debug.Log("Ya hay una torreta, asi que dale a la torreta.");
+			break;
+
+		// si el juego no ha emnpezado
+		case false:
+			
+			// comprueba si puedo poner la barricada en el nodo
+			bool CanIPutThisBarricadeHere = CheckBarricadeRequeriments (clickedNode);
+
+			// si puedo ponerla
+			if (CanIPutThisBarricadeHere) {
+
+				// la construímos
+				BuildBarricade (clickedNode);
 			}
-
-			// y no tenemos torreta seleccionada
-			else if (GameManager.Instance.SelectedTurret == 0) {
-				Debug.Log("No hay torreta seleccionada.");
-			}
-			// y no es construible
-			else {
-				Debug.Log("Aqui no se puede construir.");
-			}
-		}
-
-		// si el nodo existe y la partida no ha empezado
-		else if (clickedNode != null && !GameManager.Instance.isPlayerReady) {
-
-			// y el nodo es caminable, construible y no tiene una barricada construida
-			if (clickedNode.isWalkable &&
-				clickedNode.isBuildable &&
-				!clickedNode.isBuildableAndHasABarricade) {
-
-				// sacamos todos sus vecinos y los guardamos en una lista
-				List<Node> neighboursList = grid.GetNeighbours(clickedNode);
-
-				// ponemos una variable para ver el numero de conexiones caminables
-				int walkableConnection = 0;
-
-				// y con un foreach miramos cuantos vecinos son caminables
-				foreach (Node n in neighboursList){
-					if (n.isWalkable){
-						walkableConnection++;
-					}	
-				}
-
-				// si hay menos de 3 caminables
-				if (walkableConnection < 3){
-					
-					// y quedan barricadas
-					if (GameManager.Instance.Barricades > 0) {
-
-						// calculamos si, tras construir la barricada habria un camino libre:
-						// seteamos el nodo como no caminable
-						clickedNode.isWalkable = false;
-
-						// buscamos el camino mas corto
-						pathfinder.FindShortestPathFromAllSources ();
-
-						// devolvemos el nodo a su estado original
-						clickedNode.isWalkable = true;
-
-						// si existe al menos un camino de principio a fin
-						if (grid.pathList.Count > 0) {
-
-							// construye la barricada
-							BuildBarricade();
-						}
-
-						// si no existe al menos un camino
-						else {
-
-							// no hagas nada
-							Debug.Log ("Esto bloquea los caminos, asi que no se puede construir aquí.");
-						}
-					}
-					// y no quedan barricadas, no hagas nada
-					else {
-						Debug.Log ("No quedan barricadas.");
-					}
-				}
-
-				// si hay 3 o mas conexiones caminables
-				else {
-					
-					// es un cruce, así que no se pueden construir barricadas
-					Debug.Log ("No se pueden hacer barricadas en un cruce.");
-				}
-			}
-
-			// si tiene una barricada (en principio con comprobar esto vale, pues que
-			// tenga una barricada implica que es caminable y construible)
-			else if (clickedNode.isBuildableAndHasABarricade) {
-				Debug.Log ("Ya hay una barricada, asi que dale a la barricada.");
-			}
-		}
+			break;
 
 		// si no se cumple nada de lo anterior
-		else {
+		default:
+
 			// do nothing, succesfully
 			Debug.Log ("Nu se, no has na por si acaso.");
+			break;
 		}
 	}
 
 	#endregion
 
 	// Función para construir la torreta.
-	void BuildTurret(){
+	void BuildTurret(Node currentNode){
 
 		// sacamos la torreta a construir y su coste
 		GameObject turretToBuild = GetSelectedTurret ();
@@ -284,10 +336,10 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 			if (costNewTurret <= GameManager.Instance.Money) {
 
 				// instanciamos la nueva torreta
-				Instantiate (turretToBuild, clickedNode.worldPosition, Quaternion.identity);
+				Instantiate (turretToBuild, currentNode.worldPosition, Quaternion.identity);
 
 				// seteamos el nodo como ocupado
-				clickedNode.isBuildableAndHasATurret = true;
+				currentNode.isBuildableAndHasATurret = true;
 
 				// reducimos el dinero que tenemos porque nos lo hemos gastado
 				GameManager.Instance.Money -= costNewTurret;	
@@ -300,16 +352,12 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 		}
 	}
 
-	// Funcion para construir barricadas
-	void BuildBarricade() {
-
-		// preparamos el nodo para tener la barricada
-		clickedNode.isWalkable = false;
-		clickedNode.isBuildableAndHasABarricade = true;
-
+	// Función para sacar la barricada a spawnear (orientada)
+	GameObject SelectOrientedBarricade(Node currentNode) {
+		
 		// comprobamos los nodos adyacentes para ver cómo debemos orientar la barricada
 		// para ello, primero sacamos los nodos adyacentes
-		List<Node> neighboursList = grid.GetNeighbours (clickedNode);
+		List<Node> neighboursList = grid.GetNeighbours (currentNode);
 
 		// creamos la variable en la que guardaremos la barricada a spawnear
 		GameObject barricadeToInstantiate = null;
@@ -331,18 +379,23 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 
 			// y el de la derecha tambien
 			if (neighboursList [3].isWalkable){
-				// entonces es una barricada horizontal
-				barricadeToInstantiate = barricadeList [0];
+				// entonces es una barricada vertical
+				barricadeToInstantiate = barricadeList [1];
 			}
 			// y el de abajo tambien
 			else if (neighboursList [1].isWalkable){
-				// entonces es una barricada en diagonal de arriba a abajo
-				barricadeToInstantiate = barricadeList [2];
+				// entonces es una barricada en diagonal de abajo a arriba
+				barricadeToInstantiate = barricadeList [3];
 			}
 			// y el de arriba tambien
 			else if (neighboursList [2].isWalkable){
-				// entonces es una barricada en diagonal de abajo a arriba
-				barricadeToInstantiate = barricadeList [3];
+				// entonces es una barricada en diagonal de arriba a abajo
+				barricadeToInstantiate = barricadeList [2];
+			}
+			// y ninguno más lo es
+			else {
+				// entonces es una esquina, luego barricada vertical
+				barricadeToInstantiate = barricadeList [1];
 			}
 		}
 		// si el de la derecha es caminable
@@ -350,20 +403,36 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 
 			// y el de arriba tambien
 			if (neighboursList [2].isWalkable){
+				// entonces es una barricada en diagonal de abajo a arriba
+				barricadeToInstantiate = barricadeList [3];
+			}
+			// y el de abajo tambien
+			if (neighboursList [1].isWalkable) {
 				// entonces es una barricada en diagonal de arriba a abajo
 				barricadeToInstantiate = barricadeList [2];
 			}
-			// y el de abajo tambien
-			if (neighboursList [1].isWalkable){
-				// entonces es una barricada en diagonal de abajo a arriba
-				barricadeToInstantiate = barricadeList [3];
+			// y ninguno más lo es
+			else {
+				// entonces es una esquina, luego barricada vertical
+				barricadeToInstantiate = barricadeList [1];
 			}
 		}
 		// si el de arriba y el de abajo son caminables
 		else if (neighboursList [1].isWalkable && neighboursList [2].isWalkable){
-			// entonces es una vertical
-			barricadeToInstantiate = barricadeList [1];
+			// entonces es una horizontal
+			barricadeToInstantiate = barricadeList [0];
 		}
+		// si el de arriba es caminable y el de abajo no
+		else if (!neighboursList [1].isWalkable && neighboursList [2].isWalkable) {
+			// entonces es una esquina, luego barricada horizontal
+			barricadeToInstantiate = barricadeList [0];
+		}
+		// si el de arriba no es caminable y el de abajo si
+		else if (neighboursList [1].isWalkable && !neighboursList [2].isWalkable) {
+			// entonces es una esquina, luego barricada horizontal
+			barricadeToInstantiate = barricadeList [0];
+		}
+
 		// y si no, error
 		else {
 			Debug.Log("Error, orientación desconocida.");
@@ -373,8 +442,31 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 		// si todo ha salido bien y tenemos una barricada lista
 		if (barricadeToInstantiate != null) {
 
+			// devolvemos la barricada orientada
+			return barricadeToInstantiate;
+		}
+
+		// si por lo que sea no hemos podido sacar una barricada
+		else {
+			return null;
+		}
+	}
+
+	// Funcion para construir barricadas
+	void BuildBarricade(Node currentNode) {
+
+		// sacamos la barricada correcta dependiendo de su orientación
+		GameObject barricade = SelectOrientedBarricade (currentNode);
+
+		// si todo ha salido bien y tenemos una barricada lista
+		if (barricade != null) {
+
+			// preparamos el nodo para tener la barricada
+			currentNode.isWalkable = false;
+			currentNode.isBuildableAndHasABarricade = true;
+
 			// colocamos la barricada
-			Instantiate (barricadeToInstantiate, new Vector2(clickedNode.worldPosition.x, clickedNode.worldPosition.y), Quaternion.identity);
+			Instantiate (barricade, new Vector2(currentNode.worldPosition.x, currentNode.worldPosition.y), Quaternion.identity);
 		}
 
 		// restamos la barricada de las que tenemos
@@ -450,6 +542,158 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 
 			// comprobamos en que nodo hemos soltado el raton
 			return grid.GetNodeFromWorldPosition (clickedMousePositionInWorldSpace);
+		}
+	}
+
+	// Función para saber si un nodo cumple los requisitos para poner una torreta
+	bool CheckTurretRequeriments(Node currentNode) {
+
+		// si el nodo existe
+		if (currentNode != null) {
+			
+			// si la partida ha empezado, es construible, no es camino,
+			// no tiene torretas ni barricadas, tenemos una torreta seleccionada y no estamos en modo destroyer
+			if (GameManager.Instance.isPlayerReady &&
+				currentNode.isBuildable &&
+				!currentNode.isWalkable &&
+				!currentNode.isBuildableAndHasATurret &&
+				!currentNode.isBuildableAndHasABarricade &&
+				GameManager.Instance.SelectedTurret != 0 &&
+				GameManager.Instance.SelectedTurret != -1) {
+
+				// el nodo es válido
+				return true;
+			}
+
+			// si está activada la opción de destruir torretas
+			else if (GameManager.Instance.SelectedTurret == -1) {
+				Debug.Log ("Modo destroyer, no hay nada que destruir.");
+				return false;
+			}
+
+			// y es construible, pero ya tiene una torreta
+			else if (currentNode.isBuildable && currentNode.isBuildableAndHasATurret) {
+				Debug.Log ("Ya hay una torreta, asi que dale a la torreta.");
+				return false;
+			}
+
+			// y no tenemos torreta seleccionada
+			else if (GameManager.Instance.SelectedTurret == 0) {
+				Debug.Log ("No hay torreta seleccionada.");
+				return false;
+			}
+			// y no es construible
+			else {
+				Debug.Log ("Aqui no se puede construir.");
+				return false;
+			}
+		}
+
+		// nodo nulo, no se puede construir
+		else {
+			Debug.Log ("Nodo nulo.");
+			return false;
+		}
+
+	}
+
+	// Función para saber si un nodo cumple los requisitos para poner una barricada
+	bool CheckBarricadeRequeriments(Node currentNode) {
+
+		// si el nodo existe
+		if(currentNode != null) {
+			
+			// si la partida no ha empezado
+			if (!GameManager.Instance.isPlayerReady) {
+
+				// y el nodo es caminable, construible y no tiene una barricada construida
+				if (currentNode.isWalkable &&
+					currentNode.isBuildable &&
+					!currentNode.isBuildableAndHasABarricade) {
+
+					// sacamos todos sus vecinos y los guardamos en una lista
+					List<Node> neighboursList = grid.GetNeighbours(currentNode);
+
+					// ponemos una variable para ver el numero de conexiones caminables
+					int walkableConnection = 0;
+
+					// y con un foreach miramos cuantos vecinos son caminables
+					foreach (Node n in neighboursList){
+						if (n.isWalkable){
+							walkableConnection++;
+						}	
+					}
+
+					// si hay menos de 3 caminables
+					if (walkableConnection < 3){
+
+						// y quedan barricadas
+						if (GameManager.Instance.Barricades > 0) {
+
+							// calculamos si, tras construir la barricada habria un camino libre:
+							// seteamos el nodo como no caminable
+							currentNode.isWalkable = false;
+
+							// buscamos el camino mas corto
+							pathfinder.FindShortestPathFromAllSources ();
+
+							// devolvemos el nodo a su estado original
+							currentNode.isWalkable = true;
+
+							// si existe al menos un camino de principio a fin
+							if (grid.pathList.Count > 0) {
+
+								// se puede construir la barricada
+								return true;
+							}
+
+							// si no existe al menos un camino
+							else {
+
+								// no hagas nada
+								Debug.Log ("Esto bloquea los caminos, asi que no se puede construir aquí.");
+								return false;
+							}
+						}
+						// y no quedan barricadas, no hagas nada
+						else {
+							Debug.Log ("No quedan barricadas.");
+							return false;
+						}
+					}
+
+					// si hay 3 o mas conexiones caminables
+					else {
+
+						// es un cruce, así que no se pueden construir barricadas
+						Debug.Log ("No se pueden hacer barricadas en un cruce.");
+						return false;
+					}
+				}
+
+				// si tiene una barricada (en principio con comprobar esto vale, pues que
+				// tenga una barricada implica que es caminable y construible)
+				else if (currentNode.isBuildableAndHasABarricade) {
+					Debug.Log ("Ya hay una barricada, asi que dale a la barricada.");
+					return false;
+				}
+
+				// si no se cumple nada de lo anterior (¿fallo?) no se puede construir
+				else {
+					return false;
+				}
+			}
+			// si el nodo no es válido o hemos empezado la partida
+			else {
+				Debug.Log ("Nodo no existe o partida empezada.");
+				return false;
+			}
+		}
+
+		// nodo nulo, no se puede construir
+		else {
+			Debug.Log ("Nodo nulo.");
+			return false;
 		}
 	}
 }

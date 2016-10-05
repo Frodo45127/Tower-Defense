@@ -12,6 +12,19 @@ using UnityEngine.EventSystems;
 
 public class Barricade : MonoBehaviour, IPointerClickHandler {
 
+
+	// variable para saber si es un fantasma o no
+	[SerializeField]
+	protected bool isPhantom;
+	public bool IsPhantom {
+		get {
+			return isPhantom;
+		}
+		set {
+			isPhantom = value;
+		}
+	}
+
 	// usamos la interfaz IPointerClickHandler para que el click no atraviese
 	// las cosas
 	#region IPointerClickHandler implementation
@@ -19,18 +32,26 @@ public class Barricade : MonoBehaviour, IPointerClickHandler {
 	// Cuando clickemos en una barricada Y SOLTEMOS EL CLICK
 	public void OnPointerClick (PointerEventData eventData){
 
-		// saca el nodo de la barricada
-		Node barricadeNode = GameObject.Find ("Ground").GetComponent<Grid> ().GetNodeFromWorldPosition (this.transform.position);
+		// si no es fantasma
+		if (!isPhantom) {
 
-		// borra la barricada
-		Destroy (this.gameObject);
+			// si la partida no ha empezado
+			if (!GameManager.Instance.isPlayerReady) {
+				
+				// saca el nodo de la barricada
+				Node barricadeNode = GameObject.Find ("Ground").GetComponent<Grid> ().GetNodeFromWorldPosition (this.transform.position);
 
-		// restaura el nodo
-		barricadeNode.isWalkable = true;
-		barricadeNode.isBuildableAndHasABarricade = false;
+				// borra la barricada
+				Destroy (this.gameObject);
 
-		// suma la barricada borrada a las barricadas restantes
-		GameManager.Instance.Barricades++;
+				// restaura el nodo
+				barricadeNode.isWalkable = true;
+				barricadeNode.isBuildableAndHasABarricade = false;
+
+				// suma la barricada borrada a las barricadas restantes
+				GameManager.Instance.Barricades++;	
+			}
+		}
 	}
 	#endregion
 }

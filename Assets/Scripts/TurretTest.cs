@@ -26,24 +26,28 @@ public class TurretTest : Turret {
 
 	void FixedUpdate() {
 
-		// si tenemos enemigo
-		if (targetEnemy != null) {
+		// si no somos un fantasma
+		if (!isPhantom) {
+			
+			// si tenemos enemigo
+			if (targetEnemy != null) {
 
-			// haz un temporizador
-			timerShot -= Time.deltaTime;
-			if (timerShot <= 0) {
+				// haz un temporizador
+				timerShot -= Time.deltaTime;
+				if (timerShot <= 0) {
 
-				// y dispara la bala con la rotacion que tenga la torreta desde el cañon
-				GameObject shotedBullet = (GameObject)Instantiate (bullet, new Vector2 (turretTop.position.x, turretTop.position.y + 0.6f), turretTop.rotation);
+					// y dispara la bala con la rotacion que tenga la torreta desde el cañon
+					GameObject shotedBullet = (GameObject)Instantiate (bullet, new Vector2 (myTransform.position.x, myTransform.position.y), Quaternion.identity);
 
-				// le decimos a la bala el daño que debe tener
-				shotedBullet.GetComponent<Bullet> ().damage = damage;
+					// le decimos a la bala el daño que debe tener
+					shotedBullet.GetComponent<Bullet> ().damage = damage;
 
-				// y el enemigo al que debe perseguir
-				shotedBullet.GetComponent<Bullet> ().targetTransform = targetEnemy.transform;
+					// y el enemigo al que debe perseguir
+					shotedBullet.GetComponent<Bullet> ().targetTransform = targetEnemy.transform;
 
-				// y reseteamos el temporizador
-				timerShot = timerShotReset;
+					// y reseteamos el temporizador
+					timerShot = timerShotReset;
+				}
 			}
 		}
 	}

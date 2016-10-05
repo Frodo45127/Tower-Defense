@@ -251,11 +251,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114000013008948922, guid: a0f8c6bcd0e924899be7efebb480e903,
-        type: 2}
-      propertyPath: barricadeList.Array.size
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 4000013450072484, guid: a0f8c6bcd0e924899be7efebb480e903, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -288,21 +283,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114000013008948922, guid: a0f8c6bcd0e924899be7efebb480e903,
-        type: 2}
-      propertyPath: turretSelectionMenu
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000013008948922, guid: a0f8c6bcd0e924899be7efebb480e903,
-        type: 2}
-      propertyPath: turretManagementMenu
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000013008948922, guid: a0f8c6bcd0e924899be7efebb480e903,
-        type: 2}
-      propertyPath: turretMenu
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 114000013574868364, guid: a0f8c6bcd0e924899be7efebb480e903,
         type: 2}
       propertyPath: startPath.Array.data[0]
@@ -317,24 +297,6 @@ Prefab:
       propertyPath: m_Name
       value: Ground
       objectReference: {fileID: 0}
-    - target: {fileID: 114000013008948922, guid: a0f8c6bcd0e924899be7efebb480e903,
-        type: 2}
-      propertyPath: turret1
-      value: 
-      objectReference: {fileID: 1000012013361002, guid: 27fbe94c87c40485fbea60143b69aa41,
-        type: 2}
-    - target: {fileID: 114000013008948922, guid: a0f8c6bcd0e924899be7efebb480e903,
-        type: 2}
-      propertyPath: turret2
-      value: 
-      objectReference: {fileID: 1000010957196122, guid: 32c1161d6ee9a43a380797eaf7002c3e,
-        type: 2}
-    - target: {fileID: 114000013008948922, guid: a0f8c6bcd0e924899be7efebb480e903,
-        type: 2}
-      propertyPath: turret3
-      value: 
-      objectReference: {fileID: 1000012013361002, guid: 246d8e1d2c44e4f48b864e17793febe9,
-        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a0f8c6bcd0e924899be7efebb480e903, type: 2}
   m_IsPrefabParent: 0
@@ -829,7 +791,6 @@ GameObject:
   - 124: {fileID: 1049811134}
   - 81: {fileID: 1049811133}
   - 114: {fileID: 1049811138}
-  - 114: {fileID: 1049811139}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -914,20 +875,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -768656878, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EventMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &1049811139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1049811132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1690312454, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_EventMask:
