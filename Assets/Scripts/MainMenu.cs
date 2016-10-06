@@ -13,6 +13,34 @@ using System.Collections;
 
 public class MainMenu : MonoBehaviour {
 
+	// variable para pillar el panel de nueva partida
+	public GameObject newGamePanel;
+
+	// muestra la pantalla de nueva partida
+	public void ShowNewGameScreen() {
+
+		// activa el panel de nueva partida
+		newGamePanel.SetActive(true);
+	}
+
+	// consigue el nombre del jugador
+	public void GetPlayerName(string playerName) {
+	
+		// guarda el nombre del jugador actual en el GameManager
+		GameManager.Instance.PlayerName = playerName;
+	}
+
+	// inicia una nueva partida
+	public void StartNewGame(){
+
+		// si tenemos un nombre de jugador
+		if (!string.IsNullOrEmpty (GameManager.Instance.PlayerName)) {
+
+			// carga el nivel 1
+			SceneManager.LoadScene (1);
+		}
+	}
+
 	// carga el nivel que le entre como argumento
 	public void LoadFirstLevel(int level) {
 		SceneManager.LoadScene (level);

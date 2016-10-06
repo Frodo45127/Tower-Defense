@@ -55,13 +55,13 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 	void Update() {
 
 		// si la partida no ha empezado
-		if (!GameManager.Instance.isPlayerReady) {
+		if (!LevelManager.Instance.isPlayerReady) {
 
 			// si tenemos un nodo válido
 			if (hoveredNode != null) {
 			
 				// si tenemos barricadas
-				if (GameManager.Instance.Barricades > 0) {
+				if (LevelManager.Instance.Barricades > 0) {
 
 					// comprobamos si el nodo en el que estamos es válido
 					bool CanIPutABarricadeHere = CheckBarricadeRequeriments (hoveredNode);
@@ -157,32 +157,32 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 			if (!selectedTurretPhantomHasBeenCleared) {
 
 				// la ponemos nula
-				GameManager.Instance.SelectedTurret = 0;
+				LevelManager.Instance.SelectedTurret = 0;
 
 				// decimos que la hemos apañado
 				selectedTurretPhantomHasBeenCleared = true;
 			}
 			
 			// si tenemos torreta seleccionada
-			if (GameManager.Instance.SelectedTurret > 0) {
+			if (LevelManager.Instance.SelectedTurret > 0) {
 
 				// si tenemos un nodo válido
 				if (hoveredNode != null) {
 
 					// si no tenemos torreta fantasma (por lo que sea) o acabamos de cambiar de torreta
-					if (selectedTurretPhantom == null || GameManager.Instance.hasSelectedTurretChanged) {
+					if (selectedTurretPhantom == null || LevelManager.Instance.hasSelectedTurretChanged) {
 
 						// pilla la torreta nueva
 						selectedTurretPhantom = GetSelectedTurret ();
 
 						// si hemos pillado una nueva torreta porque ha cambiado la seleccionada
-						if (GameManager.Instance.hasSelectedTurretChanged) {
+						if (LevelManager.Instance.hasSelectedTurretChanged) {
 
 							// destruye la torreta actual
 							Destroy (selectedTurretPhantomInCurrentNode);
 
 							// y dile al GameManager que ya la hemos cambiado
-							GameManager.Instance.hasSelectedTurretChanged = false;
+							LevelManager.Instance.hasSelectedTurretChanged = false;
 						}
 					}
 
@@ -280,7 +280,7 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 		clickedNode = GetNodeFromMousePosition ();
 
 		// comprobamos el estado del juego
-		switch (GameManager.Instance.isPlayerReady){
+		switch (LevelManager.Instance.isPlayerReady){
 
 		// si el juego ha empezado
 		case true:
@@ -333,7 +333,7 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 		if (turretToBuild != null) {
 			
 			// si tenemos suficiente dinero para construirla
-			if (costNewTurret <= GameManager.Instance.Money) {
+			if (costNewTurret <= LevelManager.Instance.Money) {
 
 				// instanciamos la nueva torreta
 				Instantiate (turretToBuild, currentNode.worldPosition, Quaternion.identity);
@@ -342,7 +342,7 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 				currentNode.isBuildableAndHasATurret = true;
 
 				// reducimos el dinero que tenemos porque nos lo hemos gastado
-				GameManager.Instance.Money -= costNewTurret;	
+				LevelManager.Instance.Money -= costNewTurret;	
 			} 
 
 			// si no tenemos dinero, suelta un error
@@ -470,7 +470,7 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 		}
 
 		// restamos la barricada de las que tenemos
-		GameManager.Instance.Barricades--;
+		LevelManager.Instance.Barricades--;
 	}
 
 	// Función para destruir la torreta.
@@ -486,7 +486,7 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 			Node clickedTurretNode = grid.GetNodeFromWorldPosition (clickedTurret.transform.position);
 
 			// recuperamos algo del dinero que costo construirla
-			GameManager.Instance.Money += clickedTurret.GetComponent<Turret> ().DestructionCost;
+			LevelManager.Instance.Money += clickedTurret.GetComponent<Turret> ().DestructionCost;
 
 			// destruimos la torreta
 			Destroy (clickedTurret);
@@ -505,7 +505,7 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 	GameObject GetSelectedTurret () {
 
 		// depende del numero que pongamos en el boton, instancia una torreta u otra
-		switch (GameManager.Instance.SelectedTurret) {
+		switch (LevelManager.Instance.SelectedTurret) {
 		case 1:
 			return turret1;
 		case 2:
@@ -553,20 +553,20 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 			
 			// si la partida ha empezado, es construible, no es camino,
 			// no tiene torretas ni barricadas, tenemos una torreta seleccionada y no estamos en modo destroyer
-			if (GameManager.Instance.isPlayerReady &&
+			if (LevelManager.Instance.isPlayerReady &&
 				currentNode.isBuildable &&
 				!currentNode.isWalkable &&
 				!currentNode.isBuildableAndHasATurret &&
 				!currentNode.isBuildableAndHasABarricade &&
-				GameManager.Instance.SelectedTurret != 0 &&
-				GameManager.Instance.SelectedTurret != -1) {
+				LevelManager.Instance.SelectedTurret != 0 &&
+				LevelManager.Instance.SelectedTurret != -1) {
 
 				// el nodo es válido
 				return true;
 			}
 
 			// si está activada la opción de destruir torretas
-			else if (GameManager.Instance.SelectedTurret == -1) {
+			else if (LevelManager.Instance.SelectedTurret == -1) {
 				Debug.Log ("Modo destroyer, no hay nada que destruir.");
 				return false;
 			}
@@ -578,7 +578,7 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 			}
 
 			// y no tenemos torreta seleccionada
-			else if (GameManager.Instance.SelectedTurret == 0) {
+			else if (LevelManager.Instance.SelectedTurret == 0) {
 				Debug.Log ("No hay torreta seleccionada.");
 				return false;
 			}
@@ -604,7 +604,7 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 		if(currentNode != null) {
 			
 			// si la partida no ha empezado
-			if (!GameManager.Instance.isPlayerReady) {
+			if (!LevelManager.Instance.isPlayerReady) {
 
 				// y el nodo es caminable, construible y no tiene una barricada construida
 				if (currentNode.isWalkable &&
@@ -628,7 +628,7 @@ public class TurretBuilder : MonoBehaviour, IPointerClickHandler {
 					if (walkableConnection < 3){
 
 						// y quedan barricadas
-						if (GameManager.Instance.Barricades > 0) {
+						if (LevelManager.Instance.Barricades > 0) {
 
 							// calculamos si, tras construir la barricada habria un camino libre:
 							// seteamos el nodo como no caminable

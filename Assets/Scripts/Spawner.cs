@@ -88,7 +88,7 @@ public class Spawner : MonoBehaviour {
 	void Update () {
 
 		// si hemos dado a iniciar partida
-		if (GameManager.Instance.isPlayerReady) {
+		if (LevelManager.Instance.isPlayerReady) {
 			
 			// actualiza los timers para las oleadas y los spawns
 			timerWave -= Time.deltaTime;

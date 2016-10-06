@@ -164,7 +164,7 @@ public class Turret : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler,
 		clickedTurret = this.gameObject;
 
 		// si estamos destruyendo torretas
-		if (GameManager.Instance.SelectedTurret == -1) {
+		if (LevelManager.Instance.SelectedTurret == -1) {
 			
 			// se la mandamos a la función de destrucción de torretas
 			GameObject.Find("Ground").GetComponent<TurretBuilder>().SendMessage ("DestroyTurret", clickedTurret);

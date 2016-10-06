@@ -2,9 +2,9 @@
 using System.Collections;
 
 //-----------------------------------------------------------------------
-// EnemyTest.cs
+// EnemyTestFly.cs
 // 
-// Este script es el que define el comportamiento del bicho de pruebas.
+// Este script es el que define el comportamiento del bicho volador de pruebas.
 // Por ahora el comportamiento es comun para todos, aqui solo va la
 // funcion Start().
 //

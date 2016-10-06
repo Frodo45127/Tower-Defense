@@ -36,7 +36,7 @@ public class Barricade : MonoBehaviour, IPointerClickHandler {
 		if (!isPhantom) {
 
 			// si la partida no ha empezado
-			if (!GameManager.Instance.isPlayerReady) {
+			if (!LevelManager.Instance.isPlayerReady) {
 				
 				// saca el nodo de la barricada
 				Node barricadeNode = GameObject.Find ("Ground").GetComponent<Grid> ().GetNodeFromWorldPosition (this.transform.position);
@@ -49,7 +49,7 @@ public class Barricade : MonoBehaviour, IPointerClickHandler {
 				barricadeNode.isBuildableAndHasABarricade = false;
 
 				// suma la barricada borrada a las barricadas restantes
-				GameManager.Instance.Barricades++;	
+				LevelManager.Instance.Barricades++;	
 			}
 		}
 	}

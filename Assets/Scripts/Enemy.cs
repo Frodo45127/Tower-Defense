@@ -87,7 +87,7 @@ public class Enemy : MonoBehaviour {
 					Debug.Log ("Se acabo el camino, te destruyes y le quitas un puntito al jugador.");
 
 					// hacemos daño a la base
-					GameManager.Instance.EnemyAtTheGates(damage);
+					LevelManager.Instance.EnemyAtTheGates(damage);
 
 					// eliminamos al bicho de la lista de enemigos spawneados
 					spawner.SpawnedEnemyList.Remove(this.gameObject);
@@ -125,8 +125,8 @@ public class Enemy : MonoBehaviour {
 		if (healthPoints <= 0) {
 
 			// el jugador gana puntos y dinero
-			GameManager.Instance.Score += score;
-			GameManager.Instance.Money += money;
+			LevelManager.Instance.Score += score;
+			LevelManager.Instance.Money += money;
 
 			// eliminamos al bicho de la lista de enemigos spawneados
 			spawner.SpawnedEnemyList.Remove(this.gameObject);

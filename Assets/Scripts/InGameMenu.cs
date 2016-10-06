@@ -24,9 +24,13 @@ public class InGameMenu : MonoBehaviour {
 
 	// texto en el que van las barricadas restantes
 	private Text barricadeCounter;
+	private Text scoreCounter;
+	private Text moneyCounter;
 
 	void Awake() {
 		barricadeCounter = GameObject.Find ("BarricadesLeft").GetComponent<Text> ();
+		scoreCounter = GameObject.Find ("InGameUIScore").GetComponent<Text> ();
+		moneyCounter = GameObject.Find ("InGameUIMoney").GetComponent<Text> ();
 	}
 
 	// Use this for initialization
@@ -41,11 +45,15 @@ public class InGameMenu : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// si todavia no hemos empezado
-		if (!GameManager.Instance.isPlayerReady) {
+		if (!LevelManager.Instance.isPlayerReady) {
 
 			// manten actualizado el contador de barricadas
-			barricadeCounter.text = "Te quedan " + GameManager.Instance.Barricades + " barricadas.";
+			barricadeCounter.text = "Te quedan " + LevelManager.Instance.Barricades + " barricadas.";
 		}
+
+		// actualizamos todo el rato el contador de puntos y dinero
+		scoreCounter.text = LevelManager.Instance.Score.ToString();
+		moneyCounter.text = LevelManager.Instance.Money.ToString();
 
 		// si pulsamos escape, pausa el juego
 		if (Input.GetKeyDown(KeyCode.Escape)){
@@ -61,23 +69,23 @@ public class InGameMenu : MonoBehaviour {
 
 		// caso -1, destruye la torreta en la que hagas click
 		case -1:
-			GameManager.Instance.SelectedTurret = -1;
+			LevelManager.Instance.SelectedTurret = -1;
 			break;
 		// caso 0, limpieza de la torreta seleccionada
 		case 0:
-			GameManager.Instance.SelectedTurret = 0;
+			LevelManager.Instance.SelectedTurret = 0;
 			break;
 		case 1:
-			GameManager.Instance.SelectedTurret = 1;
+			LevelManager.Instance.SelectedTurret = 1;
 			break;
 		case 2:
-			GameManager.Instance.SelectedTurret = 2;
+			LevelManager.Instance.SelectedTurret = 2;
 			break;
 		case 3:
-			GameManager.Instance.SelectedTurret = 3;
+			LevelManager.Instance.SelectedTurret = 3;
 			break;
 		default:
-			GameManager.Instance.SelectedTurret = 0;
+			LevelManager.Instance.SelectedTurret = 0;
 			Debug.Log ("Error, torreta seleccionada no valida");
 			break;
 		}
@@ -87,7 +95,7 @@ public class InGameMenu : MonoBehaviour {
 	public void StartGame() {
 
 		// dile al gamemanager que estamos listos para empezar
-		GameManager.Instance.isPlayerReady = true;
+		LevelManager.Instance.isPlayerReady = true;
 
 		// y oculta la UI que permite iniciar el juego (el boton y el contador de barricadas)
 		GameObject.Find ("StartGameMenu").SetActive(false);
@@ -101,7 +109,7 @@ public class InGameMenu : MonoBehaviour {
 			// haz el menu de pausa visible
 			pauseMenu.SetActive (true);
 			// pilla los datos de la puntuación
-			score = GameManager.Instance.Score.ToString();
+			score = LevelManager.Instance.Score.ToString();
 			// busca su text y le cuela los datos guardados
 			GameObject.Find("PauseMenuCurrentScore").GetComponent<Text>().text = "Puntos: " + score;
 		}
@@ -122,7 +130,7 @@ public class InGameMenu : MonoBehaviour {
 		// haz el menu de game over visible
 		gameOverMenu.SetActive (true);
 		// pilla los datos de la puntuación
-		score = GameManager.Instance.Score.ToString();
+		score = LevelManager.Instance.Score.ToString();
 		// busca su text y le cuela los datos guardados
 		GameObject.Find("GameOverMenuScore").GetComponent<Text>().text = "Puntos: " + score;
 	}
@@ -136,7 +144,7 @@ public class InGameMenu : MonoBehaviour {
 		// haz el menu de nivel completado visible
 		levelCompletedMenu.SetActive (true);
 		// pilla los datos de la puntuación
-		score = GameManager.Instance.Score.ToString();
+		score = LevelManager.Instance.Score.ToString();
 		// busca su text y le cuela los datos guardados
 		GameObject.Find("LevelCompletedMenuScore").GetComponent<Text>().text = "Puntos: " + score;
 	}

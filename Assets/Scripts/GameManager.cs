@@ -7,7 +7,7 @@ using System.Collections;
 // GameManager.cs
 //
 // Este script es el que controla todo lo que tiene que ocurrir de manera
-// coherente entre escenas (conservar puntos, guardar puntuaciones, etc)
+// coherente entre escenas (coordina el juego al completo).
 //
 //-----------------------------------------------------------------------
 
@@ -51,120 +51,26 @@ public class GameManager : MonoBehaviour {
 	// variable necesaria para el arranque
 	public bool IsFirstStart { get; set;}
 
-	//---------------------------
-	// Variables para la partida
-	//---------------------------
-
-	// variables necesarias para la partida
-	[SerializeField]
-	private int money;
-	public int Money { 
-		get {
-			return money;
-		} 
-		set {
-			money = value;
-		}
-	}
-	[SerializeField]
-	private int score;
-	public int Score {
-		get {
-			return score;
-		} 
-		set {
-			score = value;
-		}
-	}
-	// estos son los puntos de vida de tu base
-	[SerializeField]
-	private int baseHealthPoints;
-	public int BaseHealthPoints {
-		get {
-			return baseHealthPoints;
-		} 
-		set {
-			baseHealthPoints = value;
-		}
-	}
-	// estas son las barricadas que te quedan
-	[SerializeField]
-	private int barricades;
-	public int Barricades {
-		get {
-			return barricades;
-		} 
-		set {
-			barricades = value;
-		}
-	}
-
 	// nombre del jugador
 	public string PlayerName { get; set;}
-
-	// variable para saber si estamos en fase de preparación o de juego
-	public bool isPlayerReady;
-
-	// propiedad para saber que torreta tenemos clickeada y si ha cambiado
-	[SerializeField]
-	public bool hasSelectedTurretChanged;
-	private int selectedTurret;
-	public int SelectedTurret {
-		get { 
-			return selectedTurret;
-		}
-		set {
-			if (selectedTurret != value) {
-				selectedTurret = value;
-				hasSelectedTurretChanged = true;
-			}
-		}
-	}
 
 	// inicializamos la variable para el logo con el constructor
 	public GameManager(){
 		IsFirstStart = true;
 	}
-
-	// funcion para reducir la vida de la base y perder la partida
-	public void EnemyAtTheGates(int damage) {
-
-		// si llega un enemigo a la base, perdemos vida
-		BaseHealthPoints -= damage;
-
-		// si nos quedamos sin puntos, hemos perdio
-		if (BaseHealthPoints <= 0) {
-			Debug.Log ("Hemos perdio.");
-
-			// ejecuta un gameover de manual
-			GameObject.Find ("InGameUI").GetComponent<InGameMenu> ().GameOver ();
-		}
-	}
-
-	// funcion para resetear las variables de la partida (dinero, puntos,...)
-	public void SetLevelVariables(int _money, int _score, int _baseHealthPoints, int _barricades) {
-		// Reinicializamos todas las variables del jugador para la siguiente partida
-		isPlayerReady = false;
-		SelectedTurret = 0;
-		Money = _money;
-		Score = _score;
-		PlayerName = "";
-		BaseHealthPoints = _baseHealthPoints;
-		Barricades = _barricades;
-	}
-
+		
 	// funcion para salir al menu principal
 	public void ExitToMainMenu() {
 		// Se asegura de que el tiempo funciona, pues esto se llama normalmente con el tiempo parado
 		Time.timeScale = 1;
-		// Si hay un nombre escrito en el campo de jugador, guarda su puntuación
-		if (string.IsNullOrEmpty(GameManager.Instance.PlayerName)) {
-			// do nothing
-		}	
-		else {
-			AddToHighScoreListSorted (PlayerName, Score);
+		// Si hay un nombre escrito en el campo de jugador
+		if (!string.IsNullOrEmpty (GameManager.Instance.PlayerName)) {
+			// guarda su puntuación
+			AddToHighScoreListSorted (PlayerName, LevelManager.Instance.Score);
 		}
-		// TODO: setea todo lo relacionado con los niveles a cero o null para que no moleste en el menú
+		//FIXME: apaño cutre, arreglar
+		// Quitamos al jugador guardado
+		PlayerName = "";
 		// Volvemos al menú, después de dejar todo listo para otra partida.
 		SceneManager.LoadScene (0);
 	}

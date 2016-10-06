@@ -16,7 +16,7 @@ public class SpawnerTest : Spawner {
 	void Start () {
 
 		// arrancamos el gamemanager si no esta arrancado y seteamos los ajustes del nivel
-		GameManager.Instance.SetLevelVariables (800, 0, 5, 2);
+		LevelManager.Instance.SetLevelVariables (800, 0, 5, 2);
 
 		// tiempo entre oleadas
 		timerWave = 1f;
