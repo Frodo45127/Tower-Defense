@@ -2,6 +2,12 @@
 // hay que añadir el siguiente namespace para que el SceneManager tire
 using UnityEngine.SceneManagement;
 using System.Collections;
+// necesitamos estos namespaces para el guardado y el cargado de partidas
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+// necesario para usar las listas
+using System.Collections.Generic;
 
 //-----------------------------------------------------------------------
 // GameManager.cs
@@ -55,7 +61,7 @@ public class GameManager : MonoBehaviour {
 	public string PlayerName { get; set;}
 
 	// inicializamos la variable para el logo con el constructor
-	public GameManager(){
+	private GameManager(){
 		IsFirstStart = true;
 	}
 		
@@ -68,9 +74,8 @@ public class GameManager : MonoBehaviour {
 			// guarda su puntuación
 			AddToHighScoreListSorted (PlayerName, LevelManager.Instance.Score);
 		}
-		//FIXME: apaño cutre, arreglar
-		// Quitamos al jugador guardado
-		PlayerName = "";
+		// Guardamos el progreso del jugador actual
+		Save (PlayerName);
 		// Volvemos al menú, después de dejar todo listo para otra partida.
 		SceneManager.LoadScene (0);
 	}
@@ -117,5 +122,122 @@ public class GameManager : MonoBehaviour {
 		}
 		// al final, guarda los cambios de puntuación
 		PlayerPrefs.Save ();
+	}
+
+	// función para guardar la partida
+	public void Save(string playerName) {
+
+		// si no existe la carpeta de perfiles de jugador
+		if (!Directory.Exists (Application.persistentDataPath + "/PlayerProfiles/")) {
+			
+			// la creamos
+			Directory.CreateDirectory (Application.persistentDataPath + "/PlayerProfiles/");
+		}
+
+		// sacamos un binaryFormatter
+		BinaryFormatter bf = new BinaryFormatter();
+
+		// creamos el archivo en el que vamos a guardar
+		FileStream file = File.Create (Application.persistentDataPath + "/PlayerProfiles/" + playerName + ".dat");
+
+		// creamos una instancia de la clase que vamos a meter en el guardado
+		PlayerData playerData = new PlayerData ();
+
+		// despues de que la clase haya cogido todo lo necesario para el guardado, serializamos
+		bf.Serialize (file, playerData);
+
+		// y cerramos el archivo
+		file.Close();
+	}
+
+	// función para cargar la partida guardada
+	public void Load(string playerName) {
+
+		// si no existe la carpeta de perfiles de jugador
+		if (!Directory.Exists (Application.persistentDataPath + "/PlayerProfiles/")) {
+
+			// la creamos
+			Directory.CreateDirectory (Application.persistentDataPath + "/PlayerProfiles/");
+		}
+
+		// si el archivo a cargar existe
+		if (File.Exists(Application.persistentDataPath + "/PlayerProfiles/" + playerName + ".dat")) {
+		
+			// sacamos un binaryFormatter
+			BinaryFormatter bf = new BinaryFormatter();
+
+			// abrimos el archivo
+			FileStream file = File.Open (Application.persistentDataPath + "/PlayerProfiles/" + playerName + ".dat", FileMode.Open);
+
+			// deserializamos los datos del jugador
+			PlayerData playerData = (PlayerData)bf.Deserialize (file);
+
+			// pillamos los datos del archivo guardado
+			PlayerName = playerData.playerName;
+
+			// y cerramos el archivo
+			file.Close();
+		}
+
+		// si el archivo no existe
+		else {
+			Debug.Log ("El usuario " + playerName + " no existe.");
+		}
+	}
+
+	// función para mostrar una lista con todos los perfiles de jugador guardados
+	public List<String> GetPlayerList () {
+
+		// si existe la carpeta de perfiles de jugador
+		if (Directory.Exists (Application.persistentDataPath + "/PlayerProfiles/")) {
+
+			// hacemos la lista de nombres
+			List<String> playerList = new List<String>();
+
+			// por cada archivo de guardado que haya
+			foreach (String fileName in Directory.GetFiles(Application.persistentDataPath + "/PlayerProfiles/")) {
+
+				// sacamos el nombre del jugador
+				String playerName = Path.GetFileNameWithoutExtension (Application.persistentDataPath + "/PlayerProfiles/" + fileName);
+
+				// y añadimos ese jugador a la lista
+				playerList.Add (playerName);
+			}
+
+			// si la lista esta vacía
+			if (playerList == null) {
+				
+				// no hay jugadores guardados todavia
+				Debug.Log ("No hay perfiles creados.");
+				return null;
+			} 
+
+			// si la lista no está vacía
+			else {
+				
+				// al terminar, devuelve la lista de jugadores
+				return playerList;
+			}
+		}
+		// si no existe la carpeta de perfiles
+		else {
+			Debug.Log ("No hay perfiles creados.");
+			return null;
+		}
+	}
+}
+
+// clase privada serializable para guardar y cargar los datos
+[Serializable]
+class PlayerData {
+
+	// los datos que queremos guardar de cada partida
+	public string playerName;
+	//public int maxLevelUnlocked;
+	//public int maxPoints;
+
+	// con un constructor pillamos los datos a guardar automáticamente
+	public PlayerData() {
+		playerName = GameManager.Instance.PlayerName;
 	}
 }

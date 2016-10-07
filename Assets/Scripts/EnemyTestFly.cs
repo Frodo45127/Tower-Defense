@@ -19,8 +19,8 @@ public class EnemyTestFly : Enemy {
 		myTransform = transform;
 
 		// vida y velocidad del bicho
-		healthPoints = 3;
-		enemySpeed = 100f;
+		healthPoints = 1;
+		enemySpeed = 100f + enemySpeedModifier;
 		score = 40;
 		money = 20;
 		damage = 1;

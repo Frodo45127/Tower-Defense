@@ -67,11 +67,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyList: []
+  isPhantom: 0
   damage: 1
   range: 500
   timerShotReset: 0
   cost: 120
-  bullet: {fileID: 1000013228293536, guid: a937757aa0a5a4339a2a4e130abd657d, type: 2}
+  bullet: {fileID: 1000012774606362, guid: bdc3025cac17543dca1ace2f4c0f8470, type: 2}
 --- !u!120 &120000011060538050
 LineRenderer:
   m_ObjectHideFlags: 1

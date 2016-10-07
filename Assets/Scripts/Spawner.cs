@@ -122,7 +122,7 @@ public class Spawner : MonoBehaviour {
 				else if (timerSpawn <= 0 && unitsSpawnedPerWave < maxUnitsSpawnedPerWave){
 
 					// spawnea una unidad en el punto de inicio
-					GameObject enemy = (GameObject)Instantiate (enemySpawnList [0], spawnPosition, Quaternion.identity);
+					GameObject enemy = (GameObject)Instantiate (enemySpawnList [Random.Range(0, enemySpawnList.Length)], spawnPosition, Quaternion.identity);
 
 					// le añadimos a la lista de enemigos spawneados
 					spawnedEnemyList.Add (enemy);

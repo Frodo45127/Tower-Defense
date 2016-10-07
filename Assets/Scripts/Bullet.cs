@@ -23,7 +23,7 @@ public class Bullet : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		myTransform = transform;
-		speed = 100f;
+		speed = 200f;
 	}
 	
 	// Update is called once per frame

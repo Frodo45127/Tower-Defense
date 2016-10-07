@@ -38,9 +38,10 @@ public class Enemy : MonoBehaviour {
 	[SerializeField]
 	protected int damage;
 
-	// velocidad del enemigo
+	// velocidad del enemigo y modificador
 	[SerializeField]
 	protected float enemySpeed;
+	protected float enemySpeedModifier;
 
 	// vida del enemigo
 	[SerializeField]

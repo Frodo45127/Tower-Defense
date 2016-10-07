@@ -20,7 +20,7 @@ public class BossTest : Enemy {
 
 		// vida y velocidad del bicho
 		healthPoints = 5;
-		enemySpeed = 50f;
+		enemySpeed = 50f + enemySpeedModifier;
 		score = 50;
 		money = 20;
 		damage = 1;
