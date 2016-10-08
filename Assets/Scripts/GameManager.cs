@@ -1,4 +1,11 @@
-﻿using UnityEngine;
+﻿// Copyright © Ismael Gutiérrez González <frodo_gv@hotmail.com>, 2016
+//
+// This work is free.  You can redistribute it and/or modify it under the
+// terms of the Do What The Fuck You Want To But It's Not My Fault Public
+// License, Version 1, as published by Ben McGinnes.  See the
+// LICENSE.txt file for more details.
+
+using UnityEngine;
 // hay que añadir el siguiente namespace para que el SceneManager tire
 using UnityEngine.SceneManagement;
 using System.Collections;
@@ -60,11 +67,26 @@ public class GameManager : MonoBehaviour {
 	// nombre del jugador
 	public string PlayerName { get; set;}
 
-	// inicializamos la variable para el logo con el constructor
+	// inicializamos con el constructor al arrancar el juego
 	private GameManager(){
+
+		// variable para que el logo no salga mas de una vez al volver al menu
 		IsFirstStart = true;
 	}
 		
+	void Start() {
+
+		// saca el nombre del ultimo jugador si existe
+		if (PlayerPrefs.HasKey("LastPlayer")) {
+			PlayerName = PlayerPrefs.GetString ("LastPlayer");
+		}
+
+		// si no hay último jugador
+		else {
+			Debug.Log ("No hay ultimo jugador");
+		}
+	}
+
 	// funcion para salir al menu principal
 	public void ExitToMainMenu() {
 		// Se asegura de que el tiempo funciona, pues esto se llama normalmente con el tiempo parado
@@ -78,6 +100,17 @@ public class GameManager : MonoBehaviour {
 		Save (PlayerName);
 		// Volvemos al menú, después de dejar todo listo para otra partida.
 		SceneManager.LoadScene (0);
+	}
+
+	// funcion para salir del juego al escritorio
+	public void ExitToDesktop() {
+
+		// guardamos lo necesario
+		PlayerPrefs.SetString ("LastPlayer", GameManager.Instance.PlayerName);
+		PlayerPrefs.Save ();
+
+		// y salimos del juego
+		Application.Quit ();
 	}
 		
 	// funcion para añadir una puntuación a la lista de puntuaciones, ordenadas de mayor a menor.
@@ -150,6 +183,22 @@ public class GameManager : MonoBehaviour {
 		file.Close();
 	}
 
+	// función para borrar la partida
+	public void Delete(string playerName) {
+
+		// si no existe la carpeta de perfiles de jugador
+		if (Directory.Exists (Application.persistentDataPath + "/PlayerProfiles/")) {
+		
+			// borramos el archivo de perfil del jugador
+			File.Delete (Application.persistentDataPath + "/PlayerProfiles/" + playerName + ".dat");
+		}
+
+		// si no existe
+		else {
+			Debug.Log ("Error, carpeta de perfiles no encontrada.");
+		}
+	}
+
 	// función para cargar la partida guardada
 	public void Load(string playerName) {
 
@@ -199,6 +248,13 @@ public class GameManager : MonoBehaviour {
 
 				// sacamos el nombre del jugador
 				String playerName = Path.GetFileNameWithoutExtension (Application.persistentDataPath + "/PlayerProfiles/" + fileName);
+
+				// si el jugador tiene un nombre vacío
+				if (playerName.Length == 0) {
+
+					// te lo saltas
+					continue;
+				}
 
 				// y añadimos ese jugador a la lista
 				playerList.Add (playerName);
