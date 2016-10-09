@@ -115,9 +115,8 @@ public class MainMenu : MainMenuCommon {
 		// hace que la cámara gire
 		GameObject.FindGameObjectWithTag ("MainCamera").SendMessage ("MoveCamera", 3);
 
-		// FIXME: esto no hay que descomentarlo hasta que hagamos la tabla de puntuaciones
 		// actualiza la lista de puntuación
-		//GameObject.FindGameObjectWithTag ("HighScoreList").SendMessage ("UpdateList");
+		GameObject.Find("CanvasHighScoreList").SendMessage ("UpdateList");	
 	}
 
 	// muestra los créditos 

@@ -27,7 +27,7 @@ public class InGameMenu : MonoBehaviour {
 	public GameObject pauseMenu, levelCompletedMenu, gameOverMenu;
 
 	// variable interna para la puntuacion
-	private string score;
+	private int score;
 
 	// texto en el que van las barricadas restantes
 	private Text barricadeCounter;
@@ -116,7 +116,7 @@ public class InGameMenu : MonoBehaviour {
 			// haz el menu de pausa visible
 			pauseMenu.SetActive (true);
 			// pilla los datos de la puntuación
-			score = LevelManager.Instance.Score.ToString();
+			score = LevelManager.Instance.Score;
 			// busca su text y le cuela los datos guardados
 			GameObject.Find("PauseMenuCurrentScore").GetComponent<Text>().text = "Puntos: " + score;
 		}
@@ -137,7 +137,7 @@ public class InGameMenu : MonoBehaviour {
 		// haz el menu de game over visible
 		gameOverMenu.SetActive (true);
 		// pilla los datos de la puntuación
-		score = LevelManager.Instance.Score.ToString();
+		score = LevelManager.Instance.Score;
 		// busca su text y le cuela los datos guardados
 		GameObject.Find("GameOverMenuScore").GetComponent<Text>().text = "Puntos: " + score;
 	}
@@ -151,7 +151,12 @@ public class InGameMenu : MonoBehaviour {
 		// haz el menu de nivel completado visible
 		levelCompletedMenu.SetActive (true);
 		// pilla los datos de la puntuación
-		score = LevelManager.Instance.Score.ToString();
+		score = LevelManager.Instance.Score;
+		// si la puntuación conseguida es mayor que la conseguida hasta la fecha en este nivel
+		if (score > GameManager.Instance.MaxScorePerLevel[GameManager.Instance.CurrentLevel]) {;
+			// pon la nueva puntuación conseguida como la mayor
+			GameManager.Instance.MaxScorePerLevel [GameManager.Instance.CurrentLevel] = score;
+		}
 		// si el nivel completado es mayor que el mayor nivel completado hasta la fecha
 		if (GameManager.Instance.CurrentLevel > GameManager.Instance.HighestLevelCompleted) {
 			// este es el nuevo mayor nivel completado

@@ -12,6 +12,7 @@ TagManager:
   - Enemy
   - Bullet
   - Boss
+  - HighscoreTableScoreField
   layers:
   - Default
   - TransparentFX

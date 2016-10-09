@@ -7,6 +7,8 @@
 
 using UnityEngine;
 using System.Collections;
+// necesario para manipular la lista de máximas puntuaciones por nivel
+using System.Collections.Generic;
 // hay que añadir el siguiente namespace para que el SceneManager tire
 using UnityEngine.SceneManagement;
 
@@ -19,13 +21,15 @@ using UnityEngine.SceneManagement;
 //-----------------------------------------------------------------------
 
 public class MainMenuNewGame : MainMenuCommon {
-	
+
 	// consigue el nombre del jugador
 	public void GetPlayerName(string playerName) {
 		// guarda el nombre del jugador actual en el GameManager
 		GameManager.Instance.PlayerName = playerName;
 		// setea el mayor nivel completado de ese jugador a 0
 		GameManager.Instance.HighestLevelCompleted = 0;
+		// crea su lista de máximas puntuaciones por nivel (cantidad de niveles + 1)
+		GameManager.Instance.MaxScorePerLevel = new List<int> (new int[11]);
 		// crea el perfil del jugador
 		GameManager.Instance.Save (playerName);
 		// actualiza la lista de jugadores

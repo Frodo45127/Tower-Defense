@@ -76,6 +76,9 @@ public class GameManager : MonoBehaviour {
 	// nivel actual
 	public int CurrentLevel { get; set;}
 
+	// maxima puntuación por nivel
+	public List<int> MaxScorePerLevel { get; set;}
+
 	//---------------------------
 	// Funciones del GameManager
 	//---------------------------
@@ -101,11 +104,6 @@ public class GameManager : MonoBehaviour {
 	public void ExitToMainMenu() {
 		// Se asegura de que el tiempo funciona, pues esto se llama normalmente con el tiempo parado
 		Time.timeScale = 1;
-		// Si hay un nombre escrito en el campo de jugador
-		if (!string.IsNullOrEmpty (PlayerName)) {
-			// guarda su puntuación
-			AddToHighScoreListSorted (PlayerName, LevelManager.Instance.Score);
-		}
 		// Guardamos el progreso del jugador actual
 		Save (PlayerName);
 		// Reseteamos el nivel actual a 0
@@ -123,50 +121,6 @@ public class GameManager : MonoBehaviour {
 		PlayerPrefs.Save ();
 		// y salimos del juego
 		Application.Quit ();
-	}
-
-	// funcion para añadir una puntuación a la lista de puntuaciones, ordenadas de mayor a menor.
-	void AddToHighScoreListSorted (string playerName, int score){
-		// haz un bucle con todos los jugadores guardados (max i = 10)
-		for (int i = 1; i < 11; i++){
-			// si el puesto del jugador existe (porque hay suficientes jugadores en la lista)
-			if (PlayerPrefs.HasKey (i+"Player")) {
-				// y tiene menos puntos que tu
-				if (PlayerPrefs.GetInt(i+"Score") < score) {
-					// mueve toda la lista uno para abajo
-					for (int p = 11; p > i; p--){
-						// si el jugador existe, claro.
-						if(PlayerPrefs.HasKey (p-1+"Player")) {
-							string newPlayer = PlayerPrefs.GetString (p - 1 + "Player");
-							int newScore = PlayerPrefs.GetInt (p - 1 + "Score");
-							PlayerPrefs.SetString (p + "Player", newPlayer);
-							PlayerPrefs.SetInt (p + "Score", newScore);
-						}
-						// si el jugador no existe, prueba con el siguiente puesto.
-						else {
-							continue;
-						}
-					}
-					// y te metes tu en ese puesto y ROMPES EL PUTO BUCLE
-					PlayerPrefs.SetString (i + "Player", playerName);
-					PlayerPrefs.SetInt (i + "Score", score);
-					break;
-				}
-				// si no tienes más puntos que el del puesto que toca en el bucle, prueba con el siguiente puesto
-				else {
-					continue;
-				}
-			}
-			// si no existe
-			else {
-				//crealo y sal
-				PlayerPrefs.SetString (i+"Player", playerName);
-				PlayerPrefs.SetInt (i+"Score", score);
-				break;
-			}
-		}
-		// al final, guarda los cambios de puntuación
-		PlayerPrefs.Save ();
 	}
 
 	// función para guardar la partida
@@ -206,6 +160,7 @@ public class GameManager : MonoBehaviour {
 			// pillamos los datos del archivo guardado
 			PlayerName = playerData.playerName;
 			HighestLevelCompleted = playerData.highestLevelBeated;
+			MaxScorePerLevel = playerData.maxScorePerLevel;
 			// y cerramos el archivo
 			file.Close();
 		}
@@ -217,6 +172,8 @@ public class GameManager : MonoBehaviour {
 
 	// función para borrar la partida
 	public void Delete(string playerName) {
+		// seteamos el jugador a nulo
+		PlayerName = null;
 		// si existe la carpeta de perfiles de jugador
 		if (Directory.Exists (Application.persistentDataPath + "/PlayerProfiles/")) {
 			// borramos el archivo de perfil del jugador
@@ -273,11 +230,12 @@ class PlayerData {
 	// los datos que queremos guardar de cada partida
 	public string playerName;
 	public int highestLevelBeated;
-	//public int maxPoints;
+	public List<int> maxScorePerLevel;
 
 	// con un constructor pillamos los datos a guardar automáticamente
 	public PlayerData() {
 		playerName = GameManager.Instance.PlayerName;
 		highestLevelBeated = GameManager.Instance.HighestLevelCompleted;
+		maxScorePerLevel = GameManager.Instance.MaxScorePerLevel;
 	}
 }

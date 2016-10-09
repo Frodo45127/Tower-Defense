@@ -93,7 +93,7 @@ public class Spawner : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
+		
 		// si hemos dado a iniciar partida
 		if (LevelManager.Instance.isPlayerReady) {
 			

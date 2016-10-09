@@ -150,7 +150,6 @@ public class Pathfinder : MonoBehaviour {
 			grid.pathList = new List<List<Node>>();
 			grid.pathList.Add (Trail);
 		}
-
 	}
 
 	// Funcion para sacar la distancia entre un nodo y otro
