@@ -18,7 +18,7 @@ using UnityEngine.UI;
 //
 //-----------------------------------------------------------------------
 
-public class MainMenuScoreList : MonoBehaviour {
+public class MainMenuScoreList : MainMenuCommon {
 
 	// variables para almacenar los datos del jugador y su puntuación
 	private string playerName;
@@ -50,10 +50,5 @@ public class MainMenuScoreList : MonoBehaviour {
 				continue;
 			}
 		}
-	}
-
-	// función para decirle a la cámara que vuelva al menú principal
-	public void ReturnToMainMenu() {
-		GameObject.FindGameObjectWithTag ("MainCamera").SendMessage ("MoveCameraToMainMenu");
 	}
 }

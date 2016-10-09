@@ -9,13 +9,17 @@ using UnityEngine;
 using System.Collections;
 
 //-----------------------------------------------------------------------
-// MainMenuCredits.cs
+// MainMenuCommon.cs
 //
-// Este script es el que controla la pantalla de creditos.
-// Tambien controla el boton de regreso al menu principal.
+// Este script es el que controla el comportamiento común de todas las
+// partes del menú principal.
 //
 //-----------------------------------------------------------------------
 
-public class MainMenuCredits : MainMenuCommon {
+public class MainMenuCommon : MonoBehaviour {
 
+	// función para decirle a la cámara que vuelva al menú principal
+	public void ReturnToMainMenu() {
+		GameObject.FindGameObjectWithTag ("MainCamera").SendMessage ("MoveCamera", 0, SendMessageOptions.RequireReceiver);
+	}
 }

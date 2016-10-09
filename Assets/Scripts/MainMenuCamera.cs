@@ -23,17 +23,23 @@ public class MainMenuCamera : MonoBehaviour {
 	// cacheo del transform de la cámara y de los canvas que hemos cogido con el gameobject
 	private Transform myTransform;
 	private Transform mainMenuTransform;
+	private Transform newGameTransform;
+	private Transform loadLevelTransform;
 	private Transform highScoreTableTransform;
 	private Transform creditsTransform;
 
 	// pillamos los canvas del menú principal
 	public GameObject mainMenu;
+	public GameObject newGame;
+	public GameObject loadLevel;
 	public GameObject highScoreTable;
 	public GameObject credits;
 
 	// variables para controlar los giros
 	private bool moveToMainMenu;
-	private bool moveToHighScoreList;
+	private bool moveToNewGame;
+	private bool moveToLoadLevel;
+	private bool moveToHighScoreTable;
 	private bool moveToCredits;
 
 	// variables para el logo
@@ -61,6 +67,8 @@ public class MainMenuCamera : MonoBehaviour {
 		//inicializamos las variables
 		myTransform = transform;
 		mainMenuTransform = mainMenu.transform;
+		newGameTransform = newGame.transform;
+		loadLevelTransform = loadLevel.transform;
 		highScoreTableTransform = highScoreTable.transform;
 		creditsTransform = credits.transform;
 
@@ -90,36 +98,9 @@ public class MainMenuCamera : MonoBehaviour {
 		// A partir de aquí es código para que funcione el giro de la cámara
 
 		// TODO: mover todo este tocho de codigo a una funcion aparte
-		// si moveToHighScoreList es true nos movemos hacia ella
-		if (moveToHighScoreList == true) {
+		// si moveToMainMenu es true nos movemos hacia el menu principal
+		if (moveToMainMenu == true){
 
-			// si no esta pegada muevete suavizado
-			// esto es para que no se quede moviendose infinitamente
-			if (Vector2.Distance(myTransform.position, highScoreTableTransform.position) > 0.2f){
-
-				// sacamos la posicion en vector 2 de la tabla de puntuaciones y de nosotros
-				Vector2 highScoreTablePosition = new Vector2 (highScoreTableTransform.position.x, highScoreTableTransform.position.y);
-				Vector2 myPosition = new Vector2 (myTransform.position.x, myTransform.position.y);
-
-				// sacamos la proxima posicion con movimiento suavizado
-				Vector2 myNewPosition = Vector2.Lerp (myPosition, highScoreTablePosition, 0.1f);
-
-				// nos movemos a la proxima posicion sin cambiar nuestra Z
-				myTransform.position = new Vector3 (myNewPosition.x, myNewPosition.y, myTransform.position.z);
-			}
-
-			// si esta muy cerca del destino
-			else {
-				
-				// muevelo directamente a la coordenada de destino y desactiva el movimiento
-				myTransform.position = new Vector3 (highScoreTableTransform.position.x, highScoreTableTransform.position.y, myTransform.position.z);
-				moveToHighScoreList = false;
-			}
-		}
-
-		// si lo es moveToMainMenu nos movemos hacia el menu principal
-		else if (moveToMainMenu == true){
-			
 			// si no esta pegada muevete suavizado
 			// esto es para que no se quede moviendose infinitamente
 			if (Vector2.Distance(myTransform.position, mainMenuTransform.position) > 0.2f){
@@ -143,6 +124,87 @@ public class MainMenuCamera : MonoBehaviour {
 				moveToMainMenu = false;
 			}
 		}
+		// si lo es moveToNewGame nos movemos hacia ella
+		else if (moveToNewGame == true) {
+
+			// si no esta pegada muevete suavizado
+			// esto es para que no se quede moviendose infinitamente
+			if (Vector2.Distance(myTransform.position, newGameTransform.position) > 0.2f){
+
+				// sacamos la posicion en vector 2 de la pantalla de nueva partida y de nosotros
+				Vector2 newGamePosition = new Vector2 (newGameTransform.position.x, newGameTransform.position.y);
+				Vector2 myPosition = new Vector2 (myTransform.position.x, myTransform.position.y);
+
+				// sacamos la proxima posicion con movimiento suavizado
+				Vector2 myNewPosition = Vector2.Lerp (myPosition, newGamePosition, 0.1f);
+
+				// nos movemos a la proxima posicion sin cambiar nuestra Z
+				myTransform.position = new Vector3 (myNewPosition.x, myNewPosition.y, myTransform.position.z);
+			}
+
+			// si esta muy cerca del destino
+			else {
+
+				// muevelo directamente a la coordenada de destino y desactiva el movimiento
+				myTransform.position = new Vector3 (newGameTransform.position.x, newGameTransform.position.y, myTransform.position.z);
+				moveToNewGame = false;
+			}
+		}
+
+		// si lo es moveToLoadLevel nos movemos hacia ella
+		else if (moveToLoadLevel == true) {
+
+			// si no esta pegada muevete suavizado
+			// esto es para que no se quede moviendose infinitamente
+			if (Vector2.Distance(myTransform.position, loadLevelTransform.position) > 0.2f){
+
+				// sacamos la posicion en vector 2 de la pantalla de cargar nivel y de nosotros
+				Vector2 loadLevelPosition = new Vector2 (loadLevelTransform.position.x, loadLevelTransform.position.y);
+				Vector2 myPosition = new Vector2 (myTransform.position.x, myTransform.position.y);
+
+				// sacamos la proxima posicion con movimiento suavizado
+				Vector2 myNewPosition = Vector2.Lerp (myPosition, loadLevelPosition, 0.1f);
+
+				// nos movemos a la proxima posicion sin cambiar nuestra Z
+				myTransform.position = new Vector3 (myNewPosition.x, myNewPosition.y, myTransform.position.z);
+			}
+
+			// si esta muy cerca del destino
+			else {
+
+				// muevelo directamente a la coordenada de destino y desactiva el movimiento
+				myTransform.position = new Vector3 (loadLevelTransform.position.x, loadLevelTransform.position.y, myTransform.position.z);
+				moveToLoadLevel = false;
+			}
+		}
+
+		// si moveToHighScoreList es true nos movemos hacia ella
+		else if (moveToHighScoreTable == true) {
+
+			// si no esta pegada muevete suavizado
+			// esto es para que no se quede moviendose infinitamente
+			if (Vector2.Distance(myTransform.position, highScoreTableTransform.position) > 0.2f){
+
+				// sacamos la posicion en vector 2 de la tabla de puntuaciones y de nosotros
+				Vector2 highScoreTablePosition = new Vector2 (highScoreTableTransform.position.x, highScoreTableTransform.position.y);
+				Vector2 myPosition = new Vector2 (myTransform.position.x, myTransform.position.y);
+
+				// sacamos la proxima posicion con movimiento suavizado
+				Vector2 myNewPosition = Vector2.Lerp (myPosition, highScoreTablePosition, 0.1f);
+
+				// nos movemos a la proxima posicion sin cambiar nuestra Z
+				myTransform.position = new Vector3 (myNewPosition.x, myNewPosition.y, myTransform.position.z);
+			}
+
+			// si esta muy cerca del destino
+			else {
+				
+				// muevelo directamente a la coordenada de destino y desactiva el movimiento
+				myTransform.position = new Vector3 (highScoreTableTransform.position.x, highScoreTableTransform.position.y, myTransform.position.z);
+				moveToHighScoreTable = false;
+			}
+		}
+
 		// si lo es moveToCredits nos movemos hacia los creditos
 		else if (moveToCredits == true){
 			
@@ -229,24 +291,59 @@ public class MainMenuCamera : MonoBehaviour {
 		}
 	}
 		
-	// función para girar la cámara para ver las puntuaciones
-	void MoveCameraToHighScores () {
-		moveToMainMenu = false;
-		moveToHighScoreList = true;
-		moveToCredits = false;
-	}
+	// función para mover la cámara
+	void MoveCamera(int whereToMove) {
 
-	// función para girar la cámara para ver los créditos
-	void MoveCameraToCredits () {
-		moveToMainMenu = false;
-		moveToHighScoreList = false;
-		moveToCredits = true;
-	}
+		// 0: menú principal
+		// 1: nueva partida
+		// 2: cargar nivel
+		// 3: tabla de puntuaciones
+		// 4: creditos
 
-	// función para girar la cámara hacia el menú
-	void MoveCameraToMainMenu () {
-		moveToHighScoreList = false;
-		moveToMainMenu = true;
-		moveToCredits = false;
+		// dependiendo del número que le pasemos, movemos la cámara hacia un lado u otro
+		switch (whereToMove) {
+		case 0:
+			moveToMainMenu = true;
+			moveToNewGame = false;
+			moveToLoadLevel = false;
+			moveToHighScoreTable = false;
+			moveToCredits = false;
+			break;
+		case 1:
+			moveToMainMenu = false;
+			moveToNewGame = true;
+			moveToLoadLevel = false;
+			moveToHighScoreTable = false;
+			moveToCredits = false;
+			break;
+		case 2:
+			moveToMainMenu = false;
+			moveToNewGame = false;
+			moveToLoadLevel = true;
+			moveToHighScoreTable = false;
+			moveToCredits = false;
+			break;
+		case 3:
+			moveToMainMenu = false;
+			moveToNewGame = false;
+			moveToLoadLevel = false;
+			moveToHighScoreTable = true;
+			moveToCredits = false;
+			break;
+		case 4:
+			moveToMainMenu = false;
+			moveToNewGame = false;
+			moveToLoadLevel = false;
+			moveToHighScoreTable = false;
+			moveToCredits = true;
+			break;
+		default:
+			moveToMainMenu = false;
+			moveToNewGame = false;
+			moveToLoadLevel = false;
+			moveToHighScoreTable = false;
+			moveToCredits = false;
+			break;
+		}
 	}
 }

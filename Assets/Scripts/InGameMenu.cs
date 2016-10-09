@@ -152,6 +152,11 @@ public class InGameMenu : MonoBehaviour {
 		levelCompletedMenu.SetActive (true);
 		// pilla los datos de la puntuación
 		score = LevelManager.Instance.Score.ToString();
+		// si el nivel completado es mayor que el mayor nivel completado hasta la fecha
+		if (GameManager.Instance.CurrentLevel > GameManager.Instance.HighestLevelCompleted) {
+			// este es el nuevo mayor nivel completado
+			GameManager.Instance.HighestLevelCompleted = GameManager.Instance.CurrentLevel;
+		}
 		// busca su text y le cuela los datos guardados
 		GameObject.Find("LevelCompletedMenuScore").GetComponent<Text>().text = "Puntos: " + score;
 	}

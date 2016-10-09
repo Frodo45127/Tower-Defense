@@ -49,7 +49,6 @@ public class GameManager : MonoBehaviour {
 		else if (_instance != this) {
 			Destroy (gameObject);
 		}
-
 		// le decimos que no desaparezca al cambiar de escena
 		DontDestroyOnLoad (gameObject);
 	}
@@ -64,23 +63,34 @@ public class GameManager : MonoBehaviour {
 	// variable necesaria para el arranque
 	public bool IsFirstStart { get; set;}
 
+	//---------------------------
+	// Info del jugador
+	//---------------------------
+
 	// nombre del jugador
 	public string PlayerName { get; set;}
 
+	// máximo nivel completado
+	public int HighestLevelCompleted { get; set;}
+
+	// nivel actual
+	public int CurrentLevel { get; set;}
+
+	//---------------------------
+	// Funciones del GameManager
+	//---------------------------
+
 	// inicializamos con el constructor al arrancar el juego
 	private GameManager(){
-
 		// variable para que el logo no salga mas de una vez al volver al menu
 		IsFirstStart = true;
 	}
 		
 	void Start() {
-
 		// saca el nombre del ultimo jugador si existe
 		if (PlayerPrefs.HasKey("LastPlayer")) {
 			PlayerName = PlayerPrefs.GetString ("LastPlayer");
 		}
-
 		// si no hay último jugador
 		else {
 			Debug.Log ("No hay ultimo jugador");
@@ -92,27 +102,29 @@ public class GameManager : MonoBehaviour {
 		// Se asegura de que el tiempo funciona, pues esto se llama normalmente con el tiempo parado
 		Time.timeScale = 1;
 		// Si hay un nombre escrito en el campo de jugador
-		if (!string.IsNullOrEmpty (GameManager.Instance.PlayerName)) {
+		if (!string.IsNullOrEmpty (PlayerName)) {
 			// guarda su puntuación
 			AddToHighScoreListSorted (PlayerName, LevelManager.Instance.Score);
 		}
 		// Guardamos el progreso del jugador actual
 		Save (PlayerName);
-		// Volvemos al menú, después de dejar todo listo para otra partida.
+		// Reseteamos el nivel actual a 0
+		CurrentLevel = 0;
+		// Volvemos al menú principal
 		SceneManager.LoadScene (0);
 	}
 
 	// funcion para salir del juego al escritorio
 	public void ExitToDesktop() {
-
-		// guardamos lo necesario
-		PlayerPrefs.SetString ("LastPlayer", GameManager.Instance.PlayerName);
+		// si tenemos un jugador lo guardamos como último jugador
+		if (PlayerName != null) {
+			PlayerPrefs.SetString ("LastPlayer", PlayerName);
+		}
 		PlayerPrefs.Save ();
-
 		// y salimos del juego
 		Application.Quit ();
 	}
-		
+
 	// funcion para añadir una puntuación a la lista de puntuaciones, ordenadas de mayor a menor.
 	void AddToHighScoreListSorted (string playerName, int score){
 		// haz un bucle con todos los jugadores guardados (max i = 10)
@@ -159,118 +171,89 @@ public class GameManager : MonoBehaviour {
 
 	// función para guardar la partida
 	public void Save(string playerName) {
-
 		// si no existe la carpeta de perfiles de jugador
 		if (!Directory.Exists (Application.persistentDataPath + "/PlayerProfiles/")) {
-			
 			// la creamos
 			Directory.CreateDirectory (Application.persistentDataPath + "/PlayerProfiles/");
 		}
-
 		// sacamos un binaryFormatter
 		BinaryFormatter bf = new BinaryFormatter();
-
 		// creamos el archivo en el que vamos a guardar
 		FileStream file = File.Create (Application.persistentDataPath + "/PlayerProfiles/" + playerName + ".dat");
-
 		// creamos una instancia de la clase que vamos a meter en el guardado
 		PlayerData playerData = new PlayerData ();
-
 		// despues de que la clase haya cogido todo lo necesario para el guardado, serializamos
 		bf.Serialize (file, playerData);
-
 		// y cerramos el archivo
 		file.Close();
 	}
 
-	// función para borrar la partida
-	public void Delete(string playerName) {
-
-		// si no existe la carpeta de perfiles de jugador
-		if (Directory.Exists (Application.persistentDataPath + "/PlayerProfiles/")) {
-		
-			// borramos el archivo de perfil del jugador
-			File.Delete (Application.persistentDataPath + "/PlayerProfiles/" + playerName + ".dat");
-		}
-
-		// si no existe
-		else {
-			Debug.Log ("Error, carpeta de perfiles no encontrada.");
-		}
-	}
-
 	// función para cargar la partida guardada
 	public void Load(string playerName) {
-
 		// si no existe la carpeta de perfiles de jugador
 		if (!Directory.Exists (Application.persistentDataPath + "/PlayerProfiles/")) {
-
 			// la creamos
 			Directory.CreateDirectory (Application.persistentDataPath + "/PlayerProfiles/");
 		}
-
 		// si el archivo a cargar existe
 		if (File.Exists(Application.persistentDataPath + "/PlayerProfiles/" + playerName + ".dat")) {
-		
 			// sacamos un binaryFormatter
 			BinaryFormatter bf = new BinaryFormatter();
-
 			// abrimos el archivo
 			FileStream file = File.Open (Application.persistentDataPath + "/PlayerProfiles/" + playerName + ".dat", FileMode.Open);
-
 			// deserializamos los datos del jugador
 			PlayerData playerData = (PlayerData)bf.Deserialize (file);
-
 			// pillamos los datos del archivo guardado
 			PlayerName = playerData.playerName;
-
+			HighestLevelCompleted = playerData.highestLevelBeated;
 			// y cerramos el archivo
 			file.Close();
 		}
-
 		// si el archivo no existe
 		else {
 			Debug.Log ("El usuario " + playerName + " no existe.");
 		}
 	}
 
-	// función para mostrar una lista con todos los perfiles de jugador guardados
-	public List<String> GetPlayerList () {
-
+	// función para borrar la partida
+	public void Delete(string playerName) {
 		// si existe la carpeta de perfiles de jugador
 		if (Directory.Exists (Application.persistentDataPath + "/PlayerProfiles/")) {
+			// borramos el archivo de perfil del jugador
+			File.Delete (Application.persistentDataPath + "/PlayerProfiles/" + playerName + ".dat");
+		}
+		// si no existe
+		else {
+			Debug.Log ("Error, carpeta de perfiles no encontrada.");
+		}
+	}
 
+	// función para mostrar una lista con todos los perfiles de jugador guardados
+	public List<String> GetPlayerList () {
+		// si existe la carpeta de perfiles de jugador
+		if (Directory.Exists (Application.persistentDataPath + "/PlayerProfiles/")) {
 			// hacemos la lista de nombres
 			List<String> playerList = new List<String>();
-
 			// por cada archivo de guardado que haya
 			foreach (String fileName in Directory.GetFiles(Application.persistentDataPath + "/PlayerProfiles/")) {
-
 				// sacamos el nombre del jugador
 				String playerName = Path.GetFileNameWithoutExtension (Application.persistentDataPath + "/PlayerProfiles/" + fileName);
-
 				// si el jugador tiene un nombre vacío
 				if (playerName.Length == 0) {
-
 					// te lo saltas
 					continue;
 				}
-
 				// y añadimos ese jugador a la lista
 				playerList.Add (playerName);
 			}
-
 			// si la lista esta vacía
 			if (playerList == null) {
-				
 				// no hay jugadores guardados todavia
 				Debug.Log ("No hay perfiles creados.");
 				return null;
 			} 
-
 			// si la lista no está vacía
 			else {
-				
 				// al terminar, devuelve la lista de jugadores
 				return playerList;
 			}
@@ -289,11 +272,12 @@ class PlayerData {
 
 	// los datos que queremos guardar de cada partida
 	public string playerName;
-	//public int maxLevelUnlocked;
+	public int highestLevelBeated;
 	//public int maxPoints;
 
 	// con un constructor pillamos los datos a guardar automáticamente
 	public PlayerData() {
 		playerName = GameManager.Instance.PlayerName;
+		highestLevelBeated = GameManager.Instance.HighestLevelCompleted;
 	}
 }
